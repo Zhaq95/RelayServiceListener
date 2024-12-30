@@ -1,0 +1,86 @@
+﻿Installing assembly 'C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.InstallLog
+   assemblypath = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe
+Installing service WindowsServiceSap...
+Creating EventLog source WindowsServiceSap in log Application...
+Rolling back assembly 'C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.InstallLog
+   assemblypath = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe
+Restoring event log to previous state for source WindowsServiceSap.
+Installing assembly 'C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.InstallLog
+   assemblypath = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe
+Installing service WindowsServiceSap...
+Creating EventLog source WindowsServiceSap in log Application...
+Rolling back assembly 'C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.InstallLog
+   assemblypath = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe
+Restoring event log to previous state for source WindowsServiceSap.
+Installing assembly 'C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.InstallLog
+   assemblypath = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe
+Installing service WindowsServiceSap...
+Creating EventLog source WindowsServiceSap in log Application...
+Rolling back assembly 'C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.InstallLog
+   assemblypath = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe
+Restoring event log to previous state for source WindowsServiceSap.
+Installing assembly 'C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.InstallLog
+   assemblypath = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe
+Installing service WindowsServiceSap...
+Creating EventLog source WindowsServiceSap in log Application...
+Rolling back assembly 'C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.InstallLog
+   assemblypath = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe
+Restoring event log to previous state for source WindowsServiceSap.
+Installing assembly 'C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.InstallLog
+   assemblypath = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe
+Installing service WindowsServiceSap...
+Creating EventLog source WindowsServiceSap in log Application...
+Rolling back assembly 'C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.InstallLog
+   assemblypath = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe
+Restoring event log to previous state for source WindowsServiceSap.
+Installing assembly 'C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.InstallLog
+   assemblypath = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe
+Installing service WindowsServiceSap...
+Service WindowsServiceSap has been successfully installed.
+Creating EventLog source WindowsServiceSap in log Application...
+Committing assembly 'C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.InstallLog
+   assemblypath = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe
+Uninstalling assembly 'C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.InstallLog
+   assemblypath = C:\Users\zhaq\source\repos\WindowsServiceSap\WindowsServiceSap\bin\Debug\WindowsServiceSap.exe
+Removing EventLog source WindowsServiceSap.
+Service WindowsServiceSap is being removed from the system...
+Service WindowsServiceSap was successfully removed from the system.
