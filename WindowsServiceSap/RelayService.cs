@@ -13,6 +13,7 @@ using System.Data.Odbc;
 using static WindowsServiceSap.RelayService;
 using System.Data;
 using Microsoft.Identity.Client;
+using System.Security.Cryptography;
 
 namespace WindowsServiceSap
 {
@@ -21,27 +22,61 @@ namespace WindowsServiceSap
         private HybridConnectionListener _listener;
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private System.Timers.Timer _listenerStatusTimer;
+        private FileSystemWatcher _fileWatcher;
+        private string _relayDetailsFilePath;
         //private readonly IConfiguration _configuration;
         //public RelayService(HybridConnectionListener listener, IConfiguration configuration)
         //{ 
         //    _listener = listener;
         //    _configuration = configuration;
         //}
-  
+
+
         public async Task ConnectRelay(CancellationToken stoppingToken)
         {
             try
             {
+
                 // Ensure TLS security protocol is set globally
                 System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
-                // Get connection details (consider using IConfiguration)
-                //var connectionString = "Endpoint=sb://publicrelay.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=dI7gTAmmKjaAHrWBt9bF86IwP8aKQkOF5+ARmBZJtjQ=";
-                //var connectionString = "Endpoint=sb://odlsecurerelay.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=z3da5KH1emhCOSq+Q6WI0fmwqnnWYI/sP+ARmNAVO/g=";
-                var connectionString = "Endpoint=sb://azurerelay301224.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=l5WxpVg3nrYF7z11Mv/DgPELB9LiiDvNY+ARmGpwDDo=";
-                var hybridConnectionName = "azurerelayhybridconn";
-                //var hybridConnectionName = "sqlqueryrelay";
-                //var hybridConnectionName = "publicrelayhybridconnection";
+                // Step 1: Ensure RelayConnectionDetails.json file is created at service start if not present
+                var relayDetailsFilePath = Path.Combine(AppContext.BaseDirectory, "RelayConnectionDetails.json");
+
+                if (!File.Exists(relayDetailsFilePath))
+                {
+                    Console.WriteLine("RelayConnectionDetails.json not found. Creating default configuration file...");
+
+                    // Initialize RelayConnectionDetails with blank values
+                    var newRelayDetails = new RelayConnectionDetails
+                    {
+                        ConnectionString = "",  // Blank for the user to fill in
+                        HybridConnectionName = "" // Blank for the user to fill in
+                    };
+
+                    // Save the RelayConnectionDetails with blank values to file
+                    await SaveRelayConnectionDetailsAsync(newRelayDetails);
+
+                    Console.WriteLine("Default RelayConnectionDetails.json file created. Please update this file with valid values.");
+                }
+                else
+                {
+                    Console.WriteLine("RelayConnectionDetails.json file found.");
+                }
+
+                // Step 2: Load RelayConnectionDetails (after creation or already existing)
+                var relayDetails = await LoadRelayConnectionDetailsAsync();
+
+                // Check if values are missing (optional)
+                if (string.IsNullOrEmpty(relayDetails.ConnectionString) || string.IsNullOrEmpty(relayDetails.HybridConnectionName))
+                {
+                    Console.WriteLine("Warning: RelayConnectionString or HybridConnectionName is still missing in RelayConnectionDetails.json.");
+                }
+
+                // Step 3: Proceed with the rest of the connection logic
+                var connectionString = relayDetails.ConnectionString;
+                var hybridConnectionName = relayDetails.HybridConnectionName;
+
                 if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(hybridConnectionName))
                 {
                     Console.WriteLine("RelayConnectionString or HybridConnectionName is missing in configuration.");
@@ -55,10 +90,6 @@ namespace WindowsServiceSap
 
                 _listener = new HybridConnectionListener(relayConnectionStringBuilder.ToString())
                 {
-                    //RequestHandler = context =>
-                    //{
-                    //    Task.Run(async () => await ProcessRequestAsync(context)).GetAwaiter().GetResult();
-                    //}
                     RequestHandler = async context =>
                     {
                         try
@@ -68,7 +99,6 @@ namespace WindowsServiceSap
                         catch (Exception ex)
                         {
                             Console.WriteLine($"Error processing request: {ex.Message}");
-                            // Consider sending an error response back to the client
                             using (var writer = new StreamWriter(context.Response.OutputStream, Encoding.UTF8, 1024, leaveOpen: true))
                             {
                                 await writer.WriteLineAsync($"Error: {ex.Message}");
@@ -81,32 +111,30 @@ namespace WindowsServiceSap
                     }
                 };
 
-                // Open the listener
+                // Open the listener and start the service
                 await _listener.OpenAsync(stoppingToken);
                 Console.WriteLine("SQL Relay Listener Service started successfully.");
+
+                // Start the status timer to monitor the listener
                 _listenerStatusTimer = new System.Timers.Timer(30000);
                 _listenerStatusTimer.Elapsed += async (sender, e) => await CheckListenerStatusAsync();
                 _listenerStatusTimer.AutoReset = true;
                 _listenerStatusTimer.Enabled = true;
+
                 // Keep the service running until cancellation is requested
                 await Task.Delay(Timeout.Infinite, _cts.Token);
-
-             
             }
             catch (OperationCanceledException)
             {
-                // Graceful cancellation handling
                 Console.WriteLine("ConnectRelay operation canceled.");
             }
             catch (Exception ex)
             {
-                // Log and rethrow unexpected exceptions
                 Console.WriteLine($"Error in SQL Relay Listener Service: {ex.Message}");
                 throw;
             }
             finally
             {
-                // Ensure proper cleanup of the listener
                 if (_listener != null)
                 {
                     Console.WriteLine("Closing HybridConnectionListener...");
@@ -116,6 +144,8 @@ namespace WindowsServiceSap
                 }
             }
         }
+
+
 
         private async Task CheckListenerStatusAsync()
         {
@@ -141,6 +171,10 @@ namespace WindowsServiceSap
             {
                 _listener.CloseAsync().Wait(); // Close the listener gracefully
                 _listener = null;
+            }
+            if (_fileWatcher != null)
+            {
+                _fileWatcher.Dispose();
             }
         }
 
@@ -270,29 +304,101 @@ namespace WindowsServiceSap
 
 
 
+        //private async Task SaveOrUpdateConnectionDetailsAsync(ConnectionDetailsRequest connectionDetails)
+        //{
+        //    try
+        //    {
+        //        // Define the path to the new JSON file (e.g., connectionDetails.json)
+        //        string customJsonFilePath = Path.Combine(
+        //            AppContext.BaseDirectory, "connectionDetails.json"  // This will create the file in the same directory as the app
+        //        );
+
+        //        // Initialize a dictionary to hold connection details
+        //        var connectionData = new Dictionary<string, object>
+        //{
+        //    { "ServerAddress", connectionDetails.ServerAddress },
+        //    { "PortNumber", connectionDetails.PortNumber },
+        //    { "UserName", connectionDetails.UserName },
+        //    { "Password", connectionDetails.Password }
+
+        //};
+
+        //        // If the file exists, read its contents; otherwise, create an empty object
+        //        string json = "{}";
+        //        if (File.Exists(customJsonFilePath))
+        //        {
+        //            //json = await File.ReadAllTextAsync(customJsonFilePath);
+        //            json = await Task.Run(() => File.ReadAllText(customJsonFilePath));
+        //        }
+
+        //        // Deserialize the existing JSON into a dictionary
+        //        var existingData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(json)
+        //                           ?? new Dictionary<string, object>();
+
+        //        // Check if the "ConnectionInfo" section exists in the existing data
+        //        if (existingData.ContainsKey("ConnectionInfo"))
+        //        {
+        //            // Update existing connection details
+        //            existingData["ConnectionInfo"] = connectionData;
+        //        }
+        //        else
+        //        {
+        //            // Add new connection details section
+        //            existingData.Add("ConnectionInfo", connectionData);
+        //        }
+
+        //        // Serialize the updated data back to JSON
+        //        var updatedJson = System.Text.Json.JsonSerializer.Serialize(existingData, new System.Text.Json.JsonSerializerOptions
+        //        {
+        //            WriteIndented = true // Makes the JSON human-readable
+        //        });
+
+        //        // Write the updated JSON to the custom file (connectionDetails.json)
+        //        //await File.WriteAllTextAsync(customJsonFilePath, updatedJson);
+        //        await Task.Run(() => File.WriteAllText(customJsonFilePath, updatedJson));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log or rethrow the exception
+        //        throw new Exception("An error occurred while saving or updating connection details in the custom JSON file.", ex);
+        //    }
+        //}
+
         private async Task SaveOrUpdateConnectionDetailsAsync(ConnectionDetailsRequest connectionDetails)
         {
             try
             {
                 // Define the path to the new JSON file (e.g., connectionDetails.json)
                 string customJsonFilePath = Path.Combine(
-                    AppContext.BaseDirectory, "connectionDetails.json"  // This will create the file in the same directory as the app
+                    AppContext.BaseDirectory, "connectionDetails.json" // This will create the file in the app's directory
                 );
 
-                // Initialize a dictionary to hold connection details
+                // Encrypt sensitive fields
+                byte[] encryptedUserName = ProtectedData.Protect(
+                    Encoding.UTF8.GetBytes(connectionDetails.UserName),
+                    null,
+                    DataProtectionScope.LocalMachine
+                );
+
+                byte[] encryptedPassword = ProtectedData.Protect(
+                    Encoding.UTF8.GetBytes(connectionDetails.Password),
+                    null,
+                    DataProtectionScope.LocalMachine
+                );
+
+                // Convert encrypted fields to Base64 for storage
                 var connectionData = new Dictionary<string, object>
         {
             { "ServerAddress", connectionDetails.ServerAddress },
             { "PortNumber", connectionDetails.PortNumber },
-            { "UserName", connectionDetails.UserName },
-            { "Password", connectionDetails.Password }
+            { "UserName", Convert.ToBase64String(encryptedUserName) },
+            { "Password", Convert.ToBase64String(encryptedPassword) }
         };
 
                 // If the file exists, read its contents; otherwise, create an empty object
                 string json = "{}";
                 if (File.Exists(customJsonFilePath))
                 {
-                    //json = await File.ReadAllTextAsync(customJsonFilePath);
                     json = await Task.Run(() => File.ReadAllText(customJsonFilePath));
                 }
 
@@ -300,84 +406,179 @@ namespace WindowsServiceSap
                 var existingData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(json)
                                    ?? new Dictionary<string, object>();
 
-                // Check if the "ConnectionInfo" section exists in the existing data
+                // Update or add the connection details
                 if (existingData.ContainsKey("ConnectionInfo"))
                 {
-                    // Update existing connection details
                     existingData["ConnectionInfo"] = connectionData;
                 }
                 else
                 {
-                    // Add new connection details section
                     existingData.Add("ConnectionInfo", connectionData);
                 }
 
                 // Serialize the updated data back to JSON
-                var updatedJson = System.Text.Json.JsonSerializer.Serialize(existingData, new System.Text.Json.JsonSerializerOptions
+                var updatedJson = System.Text.Json.JsonSerializer.Serialize(existingData, new JsonSerializerOptions
                 {
                     WriteIndented = true // Makes the JSON human-readable
                 });
 
-                // Write the updated JSON to the custom file (connectionDetails.json)
-                //await File.WriteAllTextAsync(customJsonFilePath, updatedJson);
+                // Write the updated JSON to the custom file
                 await Task.Run(() => File.WriteAllText(customJsonFilePath, updatedJson));
             }
             catch (Exception ex)
             {
-                // Log or rethrow the exception
                 throw new Exception("An error occurred while saving or updating connection details in the custom JSON file.", ex);
             }
         }
 
-        private async Task<ConnectionDetailsRequest> GetConnectionDetailsAsync()
+        private async Task<ConnectionDetailsRequest> LoadConnectionDetailsAsync()
         {
             try
             {
-                // Define the path to the JSON file (connectionDetails.json)
+                // Define the path to the JSON file
                 string customJsonFilePath = Path.Combine(
-                    AppContext.BaseDirectory, "connectionDetails.json"  // Same directory as the app
+                    AppContext.BaseDirectory, "connectionDetails.json"
                 );
 
-                // Check if the file exists
                 if (!File.Exists(customJsonFilePath))
                 {
-                    throw new FileNotFoundException("connectionDetails.json file not found.");
+                    throw new FileNotFoundException("ConnectionDetails.json file not found.");
                 }
 
-                // Read the contents of the file
-                //string json = await File.ReadAllTextAsync(customJsonFilePath);
-
+                // Read the file content
                 string json = await Task.Run(() => File.ReadAllText(customJsonFilePath));
-
-                // Deserialize the JSON into a dictionary
                 var existingData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(json);
 
-                if (existingData != null && existingData.TryGetValue("ConnectionInfo", out var connectionInfoObj))
+                if (existingData == null || !existingData.ContainsKey("ConnectionInfo"))
                 {
-                    // Deserialize "ConnectionInfo" into a ConnectionDetailsRequest object
-                    var connectionInfoJson = System.Text.Json.JsonSerializer.Serialize(connectionInfoObj);
-                    var connectionDetails = System.Text.Json.JsonSerializer.Deserialize<ConnectionDetailsRequest>(connectionInfoJson);
-
-                    if (connectionDetails != null)
-                    {
-                        return connectionDetails;
-                    }
+                    throw new Exception("ConnectionInfo section not found in the JSON file.");
                 }
 
-                throw new Exception("ConnectionInfo section not found or is invalid in connectionDetails.json.");
+                // Retrieve connection details
+                var connectionData = (JsonElement)existingData["ConnectionInfo"];
+                var connectionDetails = new ConnectionDetailsRequest
+                {
+                    ServerAddress = connectionData.GetProperty("ServerAddress").GetString(),
+                    PortNumber = connectionData.GetProperty("PortNumber").GetString(),
+                    UserName = DecryptField(connectionData.GetProperty("UserName").GetString()),
+                    Password = DecryptField(connectionData.GetProperty("Password").GetString())
+                };
+
+                return connectionDetails;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while reading connection details from the custom JSON file.", ex);
+                throw new Exception("An error occurred while reading or decrypting the connection details.", ex);
             }
         }
+
+        private async Task SaveRelayConnectionDetailsAsync(RelayConnectionDetails relayDetails)
+        {
+            try
+            {
+                string filePath = Path.Combine(AppContext.BaseDirectory, "RelayConnectionDetails.json");
+
+                // Serialize to JSON with indentation for readability
+                var json = JsonSerializer.Serialize(relayDetails, new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+                await Task.Run(() => File.WriteAllText(filePath, json));
+                Console.WriteLine("RelayConnectionDetails saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving RelayConnectionDetails: {ex.Message}");
+                throw;
+            }
+        }
+
+
+        private async Task<RelayConnectionDetails> LoadRelayConnectionDetailsAsync()
+        {
+            try
+            {
+                string filePath = Path.Combine(AppContext.BaseDirectory, "RelayConnectionDetails.json");
+
+                if (!File.Exists(filePath))
+                {
+                    throw new FileNotFoundException("RelayConnectionDetails.json file not found.");
+                }
+
+                string json = await Task.Run(() => File.ReadAllText(filePath));
+                return JsonSerializer.Deserialize<RelayConnectionDetails>(json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading RelayConnectionDetails: {ex.Message}");
+                throw;
+            }
+        }
+
+        private string DecryptField(string encryptedBase64)
+        {
+            byte[] encryptedData = Convert.FromBase64String(encryptedBase64);
+
+            byte[] decryptedData = ProtectedData.Unprotect(
+                encryptedData,
+                null,
+                DataProtectionScope.LocalMachine
+            );
+
+            return Encoding.UTF8.GetString(decryptedData);
+        }
+
+
+        //private async Task<ConnectionDetailsRequest> GetConnectionDetailsAsync()
+        //{
+        //    try
+        //    {
+        //        // Define the path to the JSON file (connectionDetails.json)
+        //        string customJsonFilePath = Path.Combine(
+        //            AppContext.BaseDirectory, "connectionDetails.json"  // Same directory as the app
+        //        );
+
+        //        // Check if the file exists
+        //        if (!File.Exists(customJsonFilePath))
+        //        {
+        //            throw new FileNotFoundException("connectionDetails.json file not found.");
+        //        }
+
+        //        // Read the contents of the file
+        //        //string json = await File.ReadAllTextAsync(customJsonFilePath);
+
+        //        string json = await Task.Run(() => File.ReadAllText(customJsonFilePath));
+
+        //        // Deserialize the JSON into a dictionary
+        //        var existingData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+
+        //        if (existingData != null && existingData.TryGetValue("ConnectionInfo", out var connectionInfoObj))
+        //        {
+        //            // Deserialize "ConnectionInfo" into a ConnectionDetailsRequest object
+        //            var connectionInfoJson = System.Text.Json.JsonSerializer.Serialize(connectionInfoObj);
+        //            var connectionDetails = System.Text.Json.JsonSerializer.Deserialize<ConnectionDetailsRequest>(connectionInfoJson);
+
+        //            if (connectionDetails != null)
+        //            {
+        //                return connectionDetails;
+        //            }
+        //        }
+
+        //        throw new Exception("ConnectionInfo section not found or is invalid in connectionDetails.json.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("An error occurred while reading connection details from the custom JSON file.", ex);
+        //    }
+        //}
 
         private async Task<List<Dictionary<string, object>>> ExecuteQuery(string query)
         {
             var results = new List<Dictionary<string, object>>();
 
             // Fetch connection details from JSON based on ConnectionName
-            var connectionDetails = await GetConnectionDetailsAsync();
+            var connectionDetails = await LoadConnectionDetailsAsync();
             var sapConnectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
 
             using (var connection = new HanaConnection(sapConnectionString))
@@ -424,7 +625,7 @@ namespace WindowsServiceSap
         private async Task<List<Dictionary<string, object>>> ExecuteOdbcQuery(string query)
         {
             var driver = "HDBODBC32";
-            var connectionDetails = await GetConnectionDetailsAsync();
+            var connectionDetails = await LoadConnectionDetailsAsync();
             var odbcConnectionString = $"driver={driver};serverNode={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UID={connectionDetails.UserName};PWD={connectionDetails.Password}"; ;
 
             var results = new List<Dictionary<string, object>>();
@@ -471,7 +672,7 @@ namespace WindowsServiceSap
 
         private async Task<List<Dictionary<string, object>>> ExecuteISQuery(QueryRequestIS request)
         {
-            var connectionDetails = await GetConnectionDetailsAsync();
+            var connectionDetails = await LoadConnectionDetailsAsync();
             var sapConnectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
 
             var results = new List<Dictionary<string, object>>();
@@ -521,6 +722,9 @@ namespace WindowsServiceSap
 
 
 
+
+
+
         #region DTO
         public class ConnectionDetailsRequest
         {
@@ -528,6 +732,7 @@ namespace WindowsServiceSap
             public string PortNumber { get; set; }
             public string UserName { get; set; }
             public string Password { get; set; }
+            
         }
         public class QueryRequest
         {
@@ -541,6 +746,11 @@ namespace WindowsServiceSap
             public string TableName { get; set; }
             public string Query { get; set; }
             //public int SiteId { get; set; }
+        }
+        public class RelayConnectionDetails
+        {
+            public string ConnectionString { get; set; }
+            public string HybridConnectionName { get; set; }
         }
         #endregion
 
