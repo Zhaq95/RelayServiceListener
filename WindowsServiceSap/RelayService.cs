@@ -43,8 +43,8 @@ namespace WindowsServiceSap
                     // Initialize RelayConnectionDetails with blank values
                     var newRelayDetails = new RelayConnectionDetails
                     {
-                        ConnectionString = "",  // Blank for the user to fill in
-                        HybridConnectionName = "" // Blank for the user to fill in
+                        Key1 = "",  // Blank for the user to fill in
+                        Key2 = "" // Blank for the user to fill in
                     };
 
                     // Save the RelayConnectionDetails with blank values to file
@@ -61,14 +61,14 @@ namespace WindowsServiceSap
                 var relayDetails = await LoadRelayConnectionDetailsAsync();
 
                 // Check if values are missing (optional)
-                if (string.IsNullOrEmpty(relayDetails.ConnectionString) || string.IsNullOrEmpty(relayDetails.HybridConnectionName))
+                if (string.IsNullOrEmpty(relayDetails.Key1) || string.IsNullOrEmpty(relayDetails.Key2))
                 {
                     Console.WriteLine("Warning: RelayConnectionString or HybridConnectionName is still missing in RelayConnectionDetails.json.");
                 }
 
                 // Step 3: Proceed with the rest of the connection logic
-                var connectionString = relayDetails.ConnectionString;
-                var hybridConnectionName = relayDetails.HybridConnectionName;
+                var connectionString = relayDetails.Key1;
+                var hybridConnectionName = relayDetails.Key2;
 
                 if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(hybridConnectionName))
                 {
@@ -640,8 +640,8 @@ namespace WindowsServiceSap
         }
         public class RelayConnectionDetails
         {
-            public string ConnectionString { get; set; }
-            public string HybridConnectionName { get; set; }
+            public string Key1 { get; set; }
+            public string Key2 { get; set; }
         }
         #endregion
 
