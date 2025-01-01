@@ -22,14 +22,7 @@ namespace WindowsServiceSap
         private HybridConnectionListener _listener;
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private System.Timers.Timer _listenerStatusTimer;
-        private FileSystemWatcher _fileWatcher;
-        private string _relayDetailsFilePath;
-        //private readonly IConfiguration _configuration;
-        //public RelayService(HybridConnectionListener listener, IConfiguration configuration)
-        //{ 
-        //    _listener = listener;
-        //    _configuration = configuration;
-        //}
+
 
 
         public async Task ConnectRelay(CancellationToken stoppingToken)
@@ -172,10 +165,7 @@ namespace WindowsServiceSap
                 _listener.CloseAsync().Wait(); // Close the listener gracefully
                 _listener = null;
             }
-            if (_fileWatcher != null)
-            {
-                _fileWatcher.Dispose();
-            }
+  
         }
 
         public async Task ProcessRequestAsync(RelayedHttpListenerContext context)
@@ -304,65 +294,7 @@ namespace WindowsServiceSap
 
 
 
-        //private async Task SaveOrUpdateConnectionDetailsAsync(ConnectionDetailsRequest connectionDetails)
-        //{
-        //    try
-        //    {
-        //        // Define the path to the new JSON file (e.g., connectionDetails.json)
-        //        string customJsonFilePath = Path.Combine(
-        //            AppContext.BaseDirectory, "connectionDetails.json"  // This will create the file in the same directory as the app
-        //        );
 
-        //        // Initialize a dictionary to hold connection details
-        //        var connectionData = new Dictionary<string, object>
-        //{
-        //    { "ServerAddress", connectionDetails.ServerAddress },
-        //    { "PortNumber", connectionDetails.PortNumber },
-        //    { "UserName", connectionDetails.UserName },
-        //    { "Password", connectionDetails.Password }
-
-        //};
-
-        //        // If the file exists, read its contents; otherwise, create an empty object
-        //        string json = "{}";
-        //        if (File.Exists(customJsonFilePath))
-        //        {
-        //            //json = await File.ReadAllTextAsync(customJsonFilePath);
-        //            json = await Task.Run(() => File.ReadAllText(customJsonFilePath));
-        //        }
-
-        //        // Deserialize the existing JSON into a dictionary
-        //        var existingData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(json)
-        //                           ?? new Dictionary<string, object>();
-
-        //        // Check if the "ConnectionInfo" section exists in the existing data
-        //        if (existingData.ContainsKey("ConnectionInfo"))
-        //        {
-        //            // Update existing connection details
-        //            existingData["ConnectionInfo"] = connectionData;
-        //        }
-        //        else
-        //        {
-        //            // Add new connection details section
-        //            existingData.Add("ConnectionInfo", connectionData);
-        //        }
-
-        //        // Serialize the updated data back to JSON
-        //        var updatedJson = System.Text.Json.JsonSerializer.Serialize(existingData, new System.Text.Json.JsonSerializerOptions
-        //        {
-        //            WriteIndented = true // Makes the JSON human-readable
-        //        });
-
-        //        // Write the updated JSON to the custom file (connectionDetails.json)
-        //        //await File.WriteAllTextAsync(customJsonFilePath, updatedJson);
-        //        await Task.Run(() => File.WriteAllText(customJsonFilePath, updatedJson));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log or rethrow the exception
-        //        throw new Exception("An error occurred while saving or updating connection details in the custom JSON file.", ex);
-        //    }
-        //}
 
         private async Task SaveOrUpdateConnectionDetailsAsync(ConnectionDetailsRequest connectionDetails)
         {
@@ -530,48 +462,7 @@ namespace WindowsServiceSap
         }
 
 
-        //private async Task<ConnectionDetailsRequest> GetConnectionDetailsAsync()
-        //{
-        //    try
-        //    {
-        //        // Define the path to the JSON file (connectionDetails.json)
-        //        string customJsonFilePath = Path.Combine(
-        //            AppContext.BaseDirectory, "connectionDetails.json"  // Same directory as the app
-        //        );
 
-        //        // Check if the file exists
-        //        if (!File.Exists(customJsonFilePath))
-        //        {
-        //            throw new FileNotFoundException("connectionDetails.json file not found.");
-        //        }
-
-        //        // Read the contents of the file
-        //        //string json = await File.ReadAllTextAsync(customJsonFilePath);
-
-        //        string json = await Task.Run(() => File.ReadAllText(customJsonFilePath));
-
-        //        // Deserialize the JSON into a dictionary
-        //        var existingData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(json);
-
-        //        if (existingData != null && existingData.TryGetValue("ConnectionInfo", out var connectionInfoObj))
-        //        {
-        //            // Deserialize "ConnectionInfo" into a ConnectionDetailsRequest object
-        //            var connectionInfoJson = System.Text.Json.JsonSerializer.Serialize(connectionInfoObj);
-        //            var connectionDetails = System.Text.Json.JsonSerializer.Deserialize<ConnectionDetailsRequest>(connectionInfoJson);
-
-        //            if (connectionDetails != null)
-        //            {
-        //                return connectionDetails;
-        //            }
-        //        }
-
-        //        throw new Exception("ConnectionInfo section not found or is invalid in connectionDetails.json.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("An error occurred while reading connection details from the custom JSON file.", ex);
-        //    }
-        //}
 
         private async Task<List<Dictionary<string, object>>> ExecuteQuery(string query)
         {
