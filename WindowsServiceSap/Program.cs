@@ -7,18 +7,28 @@ namespace WindowsServiceSap
     internal static class Program
     {
         private static readonly string logSource = "WindowsServiceSap";
+
         static void Main()
         {
             if (Environment.UserInteractive)
             {
-                // Interactive mode: Run as a console application
                 Console.WriteLine("Starting service in DEBUG/Interactive mode...");
+
+                // Attempt to launch the debugger if not already attached
+                if (!Debugger.IsAttached)
+                {
+                    Debugger.Launch(); // Prompts to attach debugger
+                    Console.WriteLine("Debugger launched. Please attach the debugger.");
+                }
+
                 var service = new WindowsServiceSap();
                 try
                 {
-                    service.StartRelayServiceLogic(); // Start the service logic interactively
+                    Console.WriteLine("Starting service...");
+                    service.StartRelayServiceLogic();
+                    Console.WriteLine("Service logic started successfully.");
                     Console.WriteLine("Press Enter to stop...");
-                    Console.ReadLine(); // Keep the console running
+                    Console.ReadLine();
                 }
                 catch (Exception ex)
                 {
@@ -31,21 +41,17 @@ namespace WindowsServiceSap
             }
             else
             {
-                // Non-interactive mode: Run as a Windows Service
-                ServiceBase[] ServicesToRun;
-                ServicesToRun = new ServiceBase[]
-                {
-                    new WindowsServiceSap()
-                };
+                // Run as a Windows Service (non-interactive mode)
+                ServiceBase[] ServicesToRun = { new WindowsServiceSap() };
                 ServiceBase.Run(ServicesToRun);
             }
-
         }
+
         private static void WriteLog(string message)
         {
-            Debug.WriteLine($"{logSource}:{message}");
-            // You can implement additional logging functionality here (e.g., writing to a log file)
+            // Log messages for debugging purposes
+            Debug.WriteLine($"{logSource}: {message}");
+            // You can also write to a log file or event log here if needed
         }
     }
 }
-
