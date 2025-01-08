@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTOs\DTOs.cs" />
+    <Compile Include="HelperClasses\ConnectionDetails.cs" />
     <Compile Include="HelperClasses\EncryptionHelper.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="ProjectInstaller.cs">
@@ -164,6 +165,7 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="RelayService.cs" />
+    <Compile Include="Services\SapQueryExecutor.cs" />
     <Compile Include="WindowsServiceSap.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
+using WindowsServiceSap.Services;
 
 namespace WindowsServiceSap
 {
@@ -16,6 +17,7 @@ namespace WindowsServiceSap
         private CancellationTokenSource cancellationTokenSource;
         private readonly string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
         private Logger logger;
+        private SapQueryExecutor queryExecutor;
 
         public WindowsServiceSap()
         {
@@ -23,6 +25,7 @@ namespace WindowsServiceSap
             relayService = new RelayService();
             cancellationTokenSource = new CancellationTokenSource();
             logger = new Logger();
+            queryExecutor = new SapQueryExecutor();
         }
 
         protected override void OnStart(string[] args)
