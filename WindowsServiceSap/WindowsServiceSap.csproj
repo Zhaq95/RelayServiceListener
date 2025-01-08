@@ -154,7 +154,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTOs\DTOs.cs" />
     <Compile Include="EncryptionHelper.cs" />
+    <Compile Include="Logger\Logger.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>

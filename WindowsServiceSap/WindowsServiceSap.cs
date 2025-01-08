@@ -15,23 +15,25 @@ namespace WindowsServiceSap
         private RelayService relayService;
         private CancellationTokenSource cancellationTokenSource;
         private readonly string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
+        private Logger logger;
 
         public WindowsServiceSap()
         {
             InitializeComponent();
             relayService = new RelayService();
             cancellationTokenSource = new CancellationTokenSource();
+            logger = new Logger();
         }
 
         protected override void OnStart(string[] args)
         {
-            WriteLogAsync("Service started at: " + DateTime.Now);
+            logger.WriteLogAsync("Service started at: " + DateTime.Now);
             StartRelayServiceLogic();
         }
 
         protected override void OnStop()
         {
-            WriteLogAsync("Service stopped at: " + DateTime.Now);
+            logger.WriteLogAsync("Service stopped at: " + DateTime.Now);
             StopRelayServiceLogic();
         }
 
@@ -54,32 +56,33 @@ namespace WindowsServiceSap
             }
             catch (Exception ex)
             {
-                await WriteLogAsync($"Error starting RelayService: {ex.Message}");
+
+                await logger.WriteLogAsync($"Error starting RelayService: {ex.Message}");
             }
         }
 
-        private async Task  WriteLogAsync(string message)
-        {
-            //string path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs";
-            if (!Directory.Exists(logPath))
-            {
-                Directory.CreateDirectory(logPath);
-            }
+        //private async Task  WriteLogAsync(string message)
+        //{
+        //    //string path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs";
+        //    if (!Directory.Exists(logPath))
+        //    {
+        //        Directory.CreateDirectory(logPath);
+        //    }
 
-            string logFile = Path.Combine(logPath, "ServiceLog.txt");
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(logFile, true))
-                {
-                    await writer.WriteLineAsync(message);
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle logging exceptions here (e.g., with a secondary log mechanism)
-                Debug.WriteLine($"Error writing to log: {ex.Message}");
-            }
-        }
+        //    string logFile = Path.Combine(logPath, "ServiceLog.txt");
+        //    try
+        //    {
+        //        using (StreamWriter writer = new StreamWriter(logFile, true))
+        //        {
+        //            await writer.WriteLineAsync(message);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Handle logging exceptions here (e.g., with a secondary log mechanism)
+        //        Debug.WriteLine($"Error writing to log: {ex.Message}");
+        //    }
+        //}
     }
 
 }

@@ -14,7 +14,7 @@ using static WindowsServiceSap.RelayService;
 using System.Data;
 using Microsoft.Identity.Client;
 using System.Security.Cryptography;
-
+using WindowsServiceSap.DTOs;
 namespace WindowsServiceSap
 {
     public sealed class RelayService : IDisposable
@@ -22,121 +22,14 @@ namespace WindowsServiceSap
         private HybridConnectionListener _listener;
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private System.Timers.Timer _listenerStatusTimer;
+        private Logger logger;
+        public RelayService()
+        {
+                logger = new Logger();
+        }
 
 
 
-        //public async Task ConnectRelay(CancellationToken stoppingToken)
-        //{
-        //    try
-        //    {
-
-        //        // Ensure TLS security protocol is set globally
-        //        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-
-        //        // Step 1: Ensure RelayConnectionDetails.json file is created at service start if not present
-        //        var relayDetailsFilePath = Path.Combine(AppContext.BaseDirectory, "RelayConnectionDetails.json");
-
-        //        if (!File.Exists(relayDetailsFilePath))
-        //        {
-        //            Console.WriteLine("RelayConnectionDetails.json not found. Creating default configuration file...");
-
-        //            // Initialize RelayConnectionDetails with blank values
-        //            var newRelayDetails = new RelayConnectionDetails
-        //            {
-        //                Key1 = "",  // Blank for the user to fill in
-        //                Key2 = "" // Blank for the user to fill in
-        //            };
-
-        //            // Save the RelayConnectionDetails with blank values to file
-        //            await SaveRelayConnectionDetailsAsync(newRelayDetails);
-
-        //            Console.WriteLine("Default RelayConnectionDetails.json file created. Please update this file with valid values.");
-        //        }
-        //        else
-        //        {
-        //            Console.WriteLine("RelayConnectionDetails.json file found.");
-        //        }
-
-        //        // Step 2: Load RelayConnectionDetails (after creation or already existing)
-        //        var relayDetails = await LoadRelayConnectionDetailsAsync();
-
-        //        // Check if values are missing (optional)
-        //        if (string.IsNullOrEmpty(relayDetails.Key1) || string.IsNullOrEmpty(relayDetails.Key2))
-        //        {
-        //            Console.WriteLine("Warning: RelayConnectionString or HybridConnectionName is still missing in RelayConnectionDetails.json.");
-        //        }
-
-        //        // Step 3: Proceed with the rest of the connection logic
-        //        var connectionString = relayDetails.Key1;
-        //        var hybridConnectionName = relayDetails.Key2;
-
-        //        if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(hybridConnectionName))
-        //        {
-        //            Console.WriteLine("RelayConnectionString or HybridConnectionName is missing in configuration.");
-        //            return;
-        //        }
-
-        //        var relayConnectionStringBuilder = new RelayConnectionStringBuilder(connectionString)
-        //        {
-        //            EntityPath = hybridConnectionName
-        //        };
-
-        //        _listener = new HybridConnectionListener(relayConnectionStringBuilder.ToString())
-        //        {
-        //            RequestHandler = async context =>
-        //            {
-        //                try
-        //                {
-        //                    await ProcessRequestAsync(context);
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    Console.WriteLine($"Error processing request: {ex.Message}");
-        //                    using (var writer = new StreamWriter(context.Response.OutputStream, Encoding.UTF8, 1024, leaveOpen: true))
-        //                    {
-        //                        await writer.WriteLineAsync($"Error: {ex.Message}");
-        //                    }
-        //                }
-        //                finally
-        //                {
-        //                    await context.Response.CloseAsync(); // Important: Close the response
-        //                }
-        //            }
-        //        };
-
-        //        // Open the listener and start the service
-        //        await _listener.OpenAsync(stoppingToken);
-        //        Console.WriteLine("SQL Relay Listener Service started successfully.");
-
-        //        // Start the status timer to monitor the listener
-        //        _listenerStatusTimer = new System.Timers.Timer(30000);
-        //        _listenerStatusTimer.Elapsed += async (sender, e) => await CheckListenerStatusAsync();
-        //        _listenerStatusTimer.AutoReset = true;
-        //        _listenerStatusTimer.Enabled = true;
-
-        //        // Keep the service running until cancellation is requested
-        //        await Task.Delay(Timeout.Infinite, _cts.Token);
-        //    }
-        //    catch (OperationCanceledException)
-        //    {
-        //        Console.WriteLine("ConnectRelay operation canceled.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"Error in SQL Relay Listener Service: {ex.Message}");
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        if (_listener != null)
-        //        {
-        //            Console.WriteLine("Closing HybridConnectionListener...");
-        //            await _listener.CloseAsync(CancellationToken.None);
-        //            _listener = null;
-        //            Console.WriteLine("HybridConnectionListener closed.");
-        //        }
-        //    }
-        //}
 
         public async Task ConnectRelay(CancellationToken stoppingToken)
         {
@@ -151,6 +44,7 @@ namespace WindowsServiceSap
                 if (!File.Exists(relayDetailsFilePath))
                 {
                     Console.WriteLine("RelayConnectionDetails.json not found. Creating default configuration file...");
+                    await logger.WriteLogAsync($"RelayConnectionDetails.json not found. Creating default configuration file...");
 
                     // Initialize RelayConnectionDetails with blank values
                     var newRelayDetails = new RelayConnectionDetails
@@ -163,6 +57,8 @@ namespace WindowsServiceSap
                     await SaveRelayConnectionDetailsAsync(newRelayDetails);
 
                     Console.WriteLine("Default RelayConnectionDetails.json file created. Please update this file with valid values.");
+                    await logger.WriteLogAsync($"Default RelayConnectionDetails.json file created. Please update this file with valid values.");
+
                     return;
                 }
 
@@ -173,6 +69,8 @@ namespace WindowsServiceSap
                 if (string.IsNullOrEmpty(relayDetails.Key1) || string.IsNullOrEmpty(relayDetails.Key2))
                 {
                     Console.WriteLine("Warning: RelayConnectionString or HybridConnectionName is still missing in RelayConnectionDetails.json.");
+                    await logger.WriteLogAsync($"Warning: RelayConnectionString or HybridConnectionName is still missing in RelayConnectionDetails.json.");
+
                     return;
                 }
 
@@ -183,6 +81,8 @@ namespace WindowsServiceSap
                 if (string.IsNullOrEmpty(decryptedConnectionString) || string.IsNullOrEmpty(decryptedHybridConnectionName))
                 {
                     Console.WriteLine("Decrypted RelayConnectionString or HybridConnectionName is empty.");
+                    await logger.WriteLogAsync($"Decrypted RelayConnectionString or HybridConnectionName is empty..");
+
                     return;
                 }
 
@@ -202,6 +102,8 @@ namespace WindowsServiceSap
                         catch (Exception ex)
                         {
                             Console.WriteLine($"Error processing request: {ex.Message}");
+                            await logger.WriteLogAsync($"Error processing request: {ex.Message}");
+
                             using (var writer = new StreamWriter(context.Response.OutputStream, Encoding.UTF8, 1024, leaveOpen: true))
                             {
                                 await writer.WriteLineAsync($"Error: {ex.Message}");
@@ -216,7 +118,9 @@ namespace WindowsServiceSap
 
                 // Open the listener and start the service
                 await _listener.OpenAsync(stoppingToken);
-                Console.WriteLine("SQL Relay Listener Service started successfully.");
+                Console.WriteLine("Relay Listener Service started successfully.");
+                await logger.WriteLogAsync("Relay Listener Service started successfully.");
+
 
                 // Start the status timer to monitor the listener
                 _listenerStatusTimer = new System.Timers.Timer(30000);
@@ -233,7 +137,9 @@ namespace WindowsServiceSap
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in SQL Relay Listener Service: {ex.Message}");
+                Console.WriteLine($"Error in Relay Listener Service: {ex.Message}");
+                await logger.WriteLogAsync($"Error in Relay Listener Service: {ex.Message}");
+
                 throw;
             }
             finally
@@ -241,9 +147,13 @@ namespace WindowsServiceSap
                 if (_listener != null)
                 {
                     Console.WriteLine("Closing HybridConnectionListener...");
+                    await logger.WriteLogAsync("Closing HybridConnectionListener...");
+
                     await _listener.CloseAsync(CancellationToken.None);
                     _listener = null;
                     Console.WriteLine("HybridConnectionListener closed.");
+                    await logger.WriteLogAsync("HybridConnectionListener closed.");
+
                 }
             }
         }
@@ -255,14 +165,20 @@ namespace WindowsServiceSap
             if (_listener != null && !_listener.IsOnline)
             {
                 Console.WriteLine("HybridConnectionListener is offline. Attempting to reopen...");
+                await logger.WriteLogAsync("HybridConnectionListener is offline. Attempting to reopen...");
+
                 try
                 {
                     await _listener.OpenAsync(_cts.Token);
                     Console.WriteLine("HybridConnectionListener reopened successfully.");
+                    await logger.WriteLogAsync("HybridConnectionListener reopened successfully.");
+
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error reopening listener: {ex.Message}");
+                    await logger.WriteLogAsync($"Error reopening listener: {ex.Message}");
+
                 }
             }
         }
@@ -298,6 +214,8 @@ namespace WindowsServiceSap
                 {
                     requestBody = await reader.ReadToEndAsync();
                     Console.WriteLine($"Received request body: {requestBody}");
+                    await logger.WriteLogAsync($"Received request body: {requestBody}");
+
                 }
 
                 using (var writer = new StreamWriter(context.Response.OutputStream, Encoding.UTF8, 1024, leaveOpen: true))
@@ -347,6 +265,7 @@ namespace WindowsServiceSap
             catch (Exception ex) // Catch broader exception to handle null reference from missing header
             {
                 Console.WriteLine($"Error processing request: {ex}");
+
 
                 HttpStatusCode statusCode = ex is JsonException ? HttpStatusCode.BadRequest : HttpStatusCode.InternalServerError;
                 await SendErrorResponseAsync(context, statusCode, $"An error occurred: {ex.Message}");
@@ -415,6 +334,7 @@ namespace WindowsServiceSap
                     AppContext.BaseDirectory, "connectionDetails.json" // This will create the file in the app's directory
                 );
 
+
                 // Encrypt sensitive fields
                 byte[] encryptedUserName = ProtectedData.Protect(
                     Encoding.UTF8.GetBytes(connectionDetails.UserName),
@@ -466,6 +386,8 @@ namespace WindowsServiceSap
 
                 // Write the updated JSON to the custom file
                 await Task.Run(() => File.WriteAllText(customJsonFilePath, updatedJson));
+                await logger.WriteLogAsync($"ConnectionDetails.json file is created");
+
             }
             catch (Exception ex)
             {
@@ -528,10 +450,14 @@ namespace WindowsServiceSap
 
                 await Task.Run(() => File.WriteAllText(filePath, json));
                 Console.WriteLine("RelayConnectionDetails saved successfully.");
+                await logger.WriteLogAsync("RelayConnectionDetails saved successfully.");
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error saving RelayConnectionDetails: {ex.Message}");
+                await logger.WriteLogAsync($"Error saving RelayConnectionDetails: {ex.Message}");
+
                 throw;
             }
         }
@@ -718,43 +644,34 @@ namespace WindowsServiceSap
             return results;
         }
 
-
-
-       
-
-
-
-
-
-
-        #region DTO
-        public class ConnectionDetailsRequest
-        {
-            public string ServerAddress { get; set; }
-            public string PortNumber { get; set; }
-            public string UserName { get; set; }
-            public string Password { get; set; }
+        //#region DTO
+        //public class ConnectionDetailsRequest
+        //{
+        //    public string ServerAddress { get; set; }
+        //    public string PortNumber { get; set; }
+        //    public string UserName { get; set; }
+        //    public string Password { get; set; }
             
-        }
-        public class QueryRequest
-        {
-            public string Query { get; set; }
-            //public int SiteId { get; set; }
-        }
-        public class QueryRequestIS
-        {
+        //}
+        //public class QueryRequest
+        //{
+        //    public string Query { get; set; }
+        //    //public int SiteId { get; set; }
+        //}
+        //public class QueryRequestIS
+        //{
 
-            public string DatabaseName { get; set; }
-            public string TableName { get; set; }
-            public string Query { get; set; }
-            //public int SiteId { get; set; }
-        }
-        public class RelayConnectionDetails
-        {
-            public string Key1 { get; set; }
-            public string Key2 { get; set; }
-        }
-        #endregion
+        //    public string DatabaseName { get; set; }
+        //    public string TableName { get; set; }
+        //    public string Query { get; set; }
+        //    //public int SiteId { get; set; }
+        //}
+        //public class RelayConnectionDetails
+        //{
+        //    public string Key1 { get; set; }
+        //    public string Key2 { get; set; }
+        //}
+        //#endregion
 
     }
 }
