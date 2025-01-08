@@ -15,6 +15,7 @@ using System.Data;
 using Microsoft.Identity.Client;
 using System.Security.Cryptography;
 using WindowsServiceSap.DTOs;
+using WindowsServiceSap.HelperClasses;
 namespace WindowsServiceSap
 {
     public sealed class RelayService : IDisposable
