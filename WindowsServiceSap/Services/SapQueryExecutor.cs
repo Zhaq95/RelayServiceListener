@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Odbc;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Identity.Client;
 using Sap.Data.Hana;
 using WindowsServiceSap.DTOs;
 using WindowsServiceSap.HelperClasses;
@@ -161,6 +162,36 @@ namespace WindowsServiceSap.Services
             }
 
             return results;
+        }
+
+        public async Task<string> CheckStatus(string query)
+        {
+            try
+            {
+                var connectionDetails = await _service.LoadConnectionDetailsAsync();
+                var sapConnectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
+
+                var results = new List<Dictionary<string, object>>();
+
+                using (var connection = new HanaConnection(sapConnectionString))
+                {
+                    await connection.OpenAsync();
+
+                    connection.Close();
+                }
+
+                return "True";
+            }
+            catch (Sap.Data.Hana.HanaException ex) when (ex.Message.IndexOf("authentication failed", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                // Log the authentication failure and return "False"
+                return "False";
+            }
+            catch (Exception ex)
+            {
+                // Log other exceptions and return "False"
+                return "False";
+            }
         }
     }
 }

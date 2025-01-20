@@ -242,6 +242,14 @@ namespace WindowsServiceSap
                                 return JsonSerializer.Serialize(result); // Serialize the list to JSON
                             });
                             break;
+
+                        case "CheckStatus":
+                            await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
+                            {
+                                var result = await _queryExecutor.CheckStatus(req.Query);
+                                return JsonSerializer.Serialize(result); // Serialize the list to JSON
+                            });
+                            break;
                         default:
                             await SendErrorResponseAsync(context, writer, HttpStatusCode.BadRequest, "Invalid RequestName header.");
                             break;
