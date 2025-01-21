@@ -30,7 +30,7 @@ namespace WindowsServiceSap
         private ConnectionDetails _connectionDetails;
         public RelayService()
         {
-                logger = new Logger();
+            logger = new Logger();
             _queryExecutor = new SapQueryExecutor();
             _connectionDetails = new ConnectionDetails();
         }
@@ -256,6 +256,8 @@ namespace WindowsServiceSap
                     }
                 }
             }
+            catch (FileNotFoundException ex)
+            { await SendErrorResponseAsync(context, HttpStatusCode.NotFound, $"ConnectionDetails.json file not found: {ex.Message}"); }
             catch (Exception ex) // Catch broader exception to handle null reference from missing header
             {
                 Console.WriteLine($"Error processing request: {ex}");
@@ -308,6 +310,16 @@ namespace WindowsServiceSap
 
                 var result = await handler(request);
                 await SendResponseAsync(context, writer, HttpStatusCode.OK, result); // Add message argument
+            }
+            catch (FileNotFoundException ex) 
+            {
+                await SendErrorResponseAsync(context, writer, HttpStatusCode.NotFound, $"Connection Details File not Found: {ex.Message}");
+
+            }
+            catch (OdbcException ex)
+            {
+                await SendErrorResponseAsync(context, writer, HttpStatusCode.BadRequest, $"Something went wrong with ODBC: {ex.Message}");
+
             }
             catch (JsonException ex)
             {

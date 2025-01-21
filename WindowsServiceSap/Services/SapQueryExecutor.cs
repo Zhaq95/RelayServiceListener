@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Odbc;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Identity.Client;
@@ -24,8 +25,12 @@ namespace WindowsServiceSap.Services
 
                 var results = new List<Dictionary<string, object>>();
 
+            try
+            {
+
                 // Fetch connection details from JSON based on ConnectionName
                 var connectionDetails = await _service.LoadConnectionDetailsAsync();
+
                 var sapConnectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
 
                 using (var connection = new HanaConnection(sapConnectionString))
@@ -63,57 +68,89 @@ namespace WindowsServiceSap.Services
                     }
                     connection.Close();
                 }
+            }
+            catch (FileNotFoundException ex)
+            {
 
-                return results;
+                throw new FileNotFoundException("Failed to load connection details", ex);
+            }
+            catch (Exception ex)
+            {
+                // Catch other potential exceptions and log them accordingly.
+                throw new Exception("An error occurred while executing the query.", ex);
+            }
+            return results;
          }
 
 
 
         public async Task<List<Dictionary<string, object>>> ExecuteOdbcQuery(string query)
         {
-            var driver = "HDBODBC32";
-            var connectionDetails = await _service.LoadConnectionDetailsAsync();
-            var odbcConnectionString = $"driver={driver};serverNode={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UID={connectionDetails.UserName};PWD={connectionDetails.Password}"; ;
-
             var results = new List<Dictionary<string, object>>();
 
-            using (var connection = new OdbcConnection(odbcConnectionString))
+            try
             {
-                await connection.OpenAsync();
+                var driver = "HDBODBC32";
+                var connectionDetails = await _service.LoadConnectionDetailsAsync();
+                var odbcConnectionString = $"driver={driver};serverNode={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UID={connectionDetails.UserName};PWD={connectionDetails.Password}"; ;
 
-                using (OdbcCommand command = new OdbcCommand(query, connection))
+
+                using (var connection = new OdbcConnection(odbcConnectionString))
                 {
-                    command.CommandTimeout = 120;
-                    using (OdbcDataReader reader = command.ExecuteReader())
+                    await connection.OpenAsync();
+
+                    using (OdbcCommand command = new OdbcCommand(query, connection))
                     {
-                        // Read the first row to get column metadata
-                        await reader.ReadAsync();
-
-                        // Iterate over columns in the reader to gather metadata
-                        for (int i = 0; i < reader.FieldCount; i++)
+                        command.CommandTimeout = 120;
+                        using (OdbcDataReader reader = command.ExecuteReader())
                         {
-                            string columnName = reader.GetName(i);
-                            string dataType = reader.GetDataTypeName(i) ?? "BINTEXT";
+                            // Read the first row to get column metadata
+                            await reader.ReadAsync();
 
-                            // Modify dataType if it contains '.'
-                            if (dataType.Contains('.'))
+                            // Iterate over columns in the reader to gather metadata
+                            for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                dataType = dataType.Split('.').Last();
-                            }
+                                string columnName = reader.GetName(i);
+                                string dataType = reader.GetDataTypeName(i) ?? "BINTEXT";
 
-                            // Add column metadata to results
-                            results.Add(new Dictionary<string, object>
+                                // Modify dataType if it contains '.'
+                                if (dataType.Contains('.'))
+                                {
+                                    dataType = dataType.Split('.').Last();
+                                }
+
+                                // Add column metadata to results
+                                results.Add(new Dictionary<string, object>
                     {
                         { "ColumnName", columnName },
                         { "SourceType", dataType }
                     });
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
-            }
 
+            }
+            catch (OdbcException odbcEx)
+            {
+         
+                throw new Exception("An error occurred while executing the ODBC query.", odbcEx);
+            }
+            catch (FileNotFoundException fileNotFoundEx)
+            {
+                // Handle specific case of missing file (e.g., connection details file)
+                Console.WriteLine($"File Not Found: {fileNotFoundEx.Message}");
+                throw new FileNotFoundException("Connection details file not found.", fileNotFoundEx);
+            }
+            catch (Exception ex)
+            {
+                // Catch any other exceptions
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw new Exception("An unexpected error occurred while executing the query.", ex);
+            }
             return results;
+
         }
 
 
@@ -123,44 +160,56 @@ namespace WindowsServiceSap.Services
             var sapConnectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
 
             var results = new List<Dictionary<string, object>>();
-
-            using (var connection = new HanaConnection(sapConnectionString))
+            try
             {
-                await connection.OpenAsync();
-                string interimQuery = "";
-                if (request.Query != null) { interimQuery = request.Query; }
-                else
+
+                using (var connection = new HanaConnection(sapConnectionString))
                 {
-
-                    interimQuery = $"SELECT TOP 1 * FROM {request.DatabaseName}.{request.TableName}";
-                }
-                using (var command = new HanaCommand(interimQuery, connection))
-
-                using (var reader = await command.ExecuteReaderAsync())
-                {
-                    command.CommandTimeout = 120;
-                    DataTable schemaTable = reader.GetSchemaTable();
-
-                    foreach (DataRow row in schemaTable.Rows)
+                    await connection.OpenAsync();
+                    string interimQuery = "";
+                    if (request.Query != null) { interimQuery = request.Query; }
+                    else
                     {
-                        string columnName = row["ColumnName"].ToString();
-                        string dataType = row["DataType"].ToString();
 
-                        if (dataType.Contains('.'))
+                        interimQuery = $"SELECT TOP 1 * FROM {request.DatabaseName}.{request.TableName}";
+                    }
+                    using (var command = new HanaCommand(interimQuery, connection))
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        command.CommandTimeout = 120;
+                        DataTable schemaTable = reader.GetSchemaTable();
+
+                        foreach (DataRow row in schemaTable.Rows)
                         {
-                            dataType = dataType.Split('.').Last();
-                        }
+                            string columnName = row["ColumnName"].ToString();
+                            string dataType = row["DataType"].ToString();
 
-                        results.Add(new Dictionary<string, object>
+                            if (dataType.Contains('.'))
+                            {
+                                dataType = dataType.Split('.').Last();
+                            }
+
+                            results.Add(new Dictionary<string, object>
                         {
                             { "InterimField", columnName },
                             { "InterimType", dataType }
                         });
+                        }
                     }
+                    connection.Close();
                 }
-                connection.Close();
             }
+            catch (FileNotFoundException ex)
+            {
 
+                throw new FileNotFoundException("Failed to load connection details", ex);
+            }
+            catch (Exception ex)
+            {
+                // Catch other potential exceptions and log them accordingly.
+                throw new Exception("An error occurred while executing the query.", ex);
+            }
             return results;
         }
 
@@ -186,6 +235,11 @@ namespace WindowsServiceSap.Services
             {
                 // Log the authentication failure and return "False"
                 return "False";
+            }
+            catch (FileNotFoundException ex)
+            {
+
+                throw new FileNotFoundException("Failed to load connection details", ex);
             }
             catch (Exception ex)
             {

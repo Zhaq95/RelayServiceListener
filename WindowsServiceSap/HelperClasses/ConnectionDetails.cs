@@ -130,6 +130,7 @@ namespace WindowsServiceSap.HelperClasses
 
                 if (!File.Exists(customJsonFilePath))
                 {
+                    await logger.WriteLogAsync("ConnectionDetails.json file is not found.");
                     throw new FileNotFoundException("ConnectionDetails.json file not found.");
                 }
 
@@ -152,9 +153,10 @@ namespace WindowsServiceSap.HelperClasses
 
                 return connectionDetails;
             }
+            catch (FileNotFoundException exi) { throw new FileNotFoundException("ConnectionDetails File not Found", exi); }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while reading or decrypting the connection details.", ex);
+                throw new Exception("An error occurred while reading the connection details.", ex);
             }
         }
 
