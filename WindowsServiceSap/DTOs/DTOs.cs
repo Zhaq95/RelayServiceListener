@@ -29,4 +29,10 @@ namespace WindowsServiceSap.DTOs
         public string Key1 { get; set; }
         public string Key2 { get; set; }
     }
+
+    public class DeleteConnectionDetailsDTO
+    {
+        public int SiteId { get; set; }
+        public int TenantId { get; set; }
+    }
 }

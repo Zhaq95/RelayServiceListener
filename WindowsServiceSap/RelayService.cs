@@ -250,6 +250,17 @@ namespace WindowsServiceSap
                                 return JsonSerializer.Serialize(result); // Serialize the list to JSON
                             });
                             break;
+                        case "DeleteConnectionDetails":
+                            await HandleRequestAsync<DeleteConnectionDetailsDTO>(context, writer, requestBody, async (req) =>
+                            {
+                                var result = await _connectionDetails.DeleteConnectionDetailsAsync(req);
+                                return JsonSerializer.Serialize(new
+                                {
+                                    Success = result,
+                                    Message = result ? "File deleted successfully." : "File does not exist."
+                                });
+                            });
+                            break;
                         default:
                             await SendErrorResponseAsync(context, writer, HttpStatusCode.BadRequest, "Invalid RequestName header.");
                             break;

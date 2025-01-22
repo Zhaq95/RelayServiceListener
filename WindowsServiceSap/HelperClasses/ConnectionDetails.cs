@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -92,6 +94,20 @@ namespace WindowsServiceSap.HelperClasses
                 await Task.Run(() => File.WriteAllText(filePath, json));
                 Console.WriteLine("RelayConnectionDetails saved successfully.");
                 await logger.WriteLogAsync("RelayConnectionDetails saved successfully.");
+                FileInfo fileInfo = new FileInfo(filePath);
+                FileSecurity fileSecurity = fileInfo.GetAccessControl();
+
+                // Define admin access rules
+                fileSecurity.AddAccessRule(new FileSystemAccessRule(
+                    new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null),
+                    FileSystemRights.FullControl,
+                    AccessControlType.Allow));
+
+                // Apply the updated permissions to the file
+                fileInfo.SetAccessControl(fileSecurity);
+
+                Console.WriteLine("Admin permissions assigned to RelayConnectionDetails.json.");
+                await logger.WriteLogAsync("Admin permissions assigned to RelayConnectionDetails.json.");
             }
             catch (Exception ex)
             {
@@ -171,6 +187,52 @@ namespace WindowsServiceSap.HelperClasses
             catch (Exception ex)
             {
                 throw new Exception("An error occurred while decrypting the field.", ex);
+            }
+        }
+
+        public async Task<bool> DeleteConnectionDetailsAsync(DeleteConnectionDetailsDTO connectionDetails)
+        {
+            try
+            {
+                string customJsonFilePath = Path.Combine(AppContext.BaseDirectory, "connectionDetails.json");
+
+                if (File.Exists(customJsonFilePath))
+                {
+                    // Ensure the file has admin permissions before attempting to delete it
+                    FileInfo fileInfo = new FileInfo(customJsonFilePath);
+                    FileSecurity fileSecurity = fileInfo.GetAccessControl();
+
+                    // Grant full control to the Administrators group
+                    fileSecurity.AddAccessRule(new FileSystemAccessRule(
+                        new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null),
+                        FileSystemRights.FullControl,
+                        AccessControlType.Allow));
+
+                    fileInfo.SetAccessControl(fileSecurity);
+
+                    // Delete the file
+                    File.Delete(customJsonFilePath);
+                    Console.WriteLine("ConnectionDetails.json file deleted successfully.");
+                    await logger.WriteLogAsync("ConnectionDetails.json file deleted successfully.");
+                    return true;
+
+                }
+                else
+                {
+                    Console.WriteLine("ConnectionDetails.json file does not exist.");
+                    await logger.WriteLogAsync("ConnectionDetails.json file does not exist.");
+                    return false;
+                }
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine($"Permission issue while deleting the file: {ex.Message}");
+                await logger.WriteLogAsync($"Permission issue while deleting the file: {ex.Message}");
+                throw new Exception("An error occurred while deleting connection details", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while deleting connection details", ex);
             }
         }
     }
