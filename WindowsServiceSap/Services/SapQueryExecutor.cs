@@ -74,6 +74,7 @@ namespace WindowsServiceSap.Services
 
                 throw new FileNotFoundException("Failed to load connection details", ex);
             }
+            catch (InvalidOperationException ex) { throw new InvalidOperationException(ex.Message); }
             catch (Exception ex)
             {
                 // Catch other potential exceptions and log them accordingly.
@@ -132,6 +133,8 @@ namespace WindowsServiceSap.Services
                 }
 
             }
+            catch (InvalidOperationException ex) { throw new InvalidOperationException(ex.Message); }
+
             catch (OdbcException odbcEx)
             {
          
@@ -200,6 +203,8 @@ namespace WindowsServiceSap.Services
                     connection.Close();
                 }
             }
+            catch (InvalidOperationException ex) { throw new InvalidOperationException(ex.Message); }
+
             catch (FileNotFoundException ex)
             {
 
@@ -231,6 +236,8 @@ namespace WindowsServiceSap.Services
 
                 return "True";
             }
+            catch (InvalidOperationException ex) { throw new InvalidOperationException(ex.Message); }
+
             catch (Sap.Data.Hana.HanaException ex) when (ex.Message.IndexOf("authentication failed", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 // Log the authentication failure and return "False"

@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|C:\\Users\\zhaq\\Documents\\RelayServiceListener\\windowsservicesap\\helperclasses\\connectiondetails.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|C:\\Users\\zhaq\\Documents\\RelayServiceListener\\windowsservicesap\\services\\sapqueryexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\services\\sapqueryexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|c:\\users\\zhaq\\documents\\relayservicelistener\\windowsservicesap\\helperclasses\\connectiondetails.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\helperclasses\\connectiondetails.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|c:\\users\\zhaq\\documents\\relayservicelistener\\windowsservicesap\\relayservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|C:\\Users\\zhaq\\Documents\\RelayServiceListener\\windowsservicesap\\relayservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\relayservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|c:\\users\\zhaq\\documents\\relayservicelistener\\windowsservicesap\\dtos\\dtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|C:\\Users\\zhaq\\Documents\\RelayServiceListener\\windowsservicesap\\dtos\\dtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\dtos\\dtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|C:\\Users\\zhaq\\Documents\\RelayServiceListener\\windowsservicesap\\services\\sapqueryexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\services\\sapqueryexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|C:\\Users\\zhaq\\Documents\\RelayServiceListener\\windowsservicesap\\helperclasses\\encryptionhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -45,19 +45,84 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
+              "Title": "ConnectionDetails.cs",
+              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
+              "RelativeDocumentMoniker": "WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
+              "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
+              "RelativeToolTip": "WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
+              "ViewState": "AQIAAJQAAAAAAAAAAAAcwMIAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-16T09:03:32.607Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "DTOs.cs",
               "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\DTOs\\DTOs.cs",
               "RelativeDocumentMoniker": "WindowsServiceSap\\DTOs\\DTOs.cs",
               "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\DTOs\\DTOs.cs",
               "RelativeToolTip": "WindowsServiceSap\\DTOs\\DTOs.cs",
-              "ViewState": "AQIAABYAAAAAAAAAAAAgwBoAAAAnAAAA",
+              "ViewState": "AQIAAAcAAAAAAAAAAAAQwCgAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-21T11:51:44.69Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "RelayService.cs",
+              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\RelayService.cs",
+              "RelativeDocumentMoniker": "WindowsServiceSap\\RelayService.cs",
+              "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\RelayService.cs",
+              "RelativeToolTip": "WindowsServiceSap\\RelayService.cs",
+              "ViewState": "AQIAADQAAAAAAAAAAAArwEgAAAA8AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-30T06:24:38.729Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Logger.cs",
+              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\Logger\\Logger.cs",
+              "RelativeDocumentMoniker": "WindowsServiceSap\\Logger\\Logger.cs",
+              "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\Logger\\Logger.cs",
+              "RelativeToolTip": "WindowsServiceSap\\Logger\\Logger.cs",
+              "ViewState": "AQIAAA4AAAAAAAAAAAAxwAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-21T06:44:53.972Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "EncryptionHelper.cs",
+              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\HelperClasses\\EncryptionHelper.cs",
+              "RelativeDocumentMoniker": "WindowsServiceSap\\HelperClasses\\EncryptionHelper.cs",
+              "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\HelperClasses\\EncryptionHelper.cs",
+              "RelativeToolTip": "WindowsServiceSap\\HelperClasses\\EncryptionHelper.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-21T06:44:11.686Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SapQueryExecutor.cs",
+              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\Services\\SapQueryExecutor.cs",
+              "RelativeDocumentMoniker": "WindowsServiceSap\\Services\\SapQueryExecutor.cs",
+              "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\Services\\SapQueryExecutor.cs",
+              "RelativeToolTip": "WindowsServiceSap\\Services\\SapQueryExecutor.cs",
+              "ViewState": "AQIAANIAAAAAAAAAAAAiwNwAAAA7AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-16T09:15:48.237Z",
               "EditorCaption": ""
             },
             {
@@ -73,69 +138,6 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "RelayService.cs",
-              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\RelayService.cs",
-              "RelativeDocumentMoniker": "WindowsServiceSap\\RelayService.cs",
-              "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\RelayService.cs",
-              "RelativeToolTip": "WindowsServiceSap\\RelayService.cs",
-              "ViewState": "AQIAAOkAAAAAAAAAAAAUwP8AAABiAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-30T06:24:38.729Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ConnectionDetails.cs",
-              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
-              "RelativeDocumentMoniker": "WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
-              "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
-              "RelativeToolTip": "WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
-              "ViewState": "AQIAAMQAAAAAAAAAAAArwNMAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-16T09:03:32.607Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Logger.cs",
-              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\Logger\\Logger.cs",
-              "RelativeDocumentMoniker": "WindowsServiceSap\\Logger\\Logger.cs",
-              "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\Logger\\Logger.cs",
-              "RelativeToolTip": "WindowsServiceSap\\Logger\\Logger.cs",
-              "ViewState": "AQIAAA4AAAAAAAAAAAAAwAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-21T06:44:53.972Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "EncryptionHelper.cs",
-              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\HelperClasses\\EncryptionHelper.cs",
-              "RelativeDocumentMoniker": "WindowsServiceSap\\HelperClasses\\EncryptionHelper.cs",
-              "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\HelperClasses\\EncryptionHelper.cs",
-              "RelativeToolTip": "WindowsServiceSap\\HelperClasses\\EncryptionHelper.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-21T06:44:11.686Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "SapQueryExecutor.cs",
-              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\Services\\SapQueryExecutor.cs",
-              "RelativeDocumentMoniker": "WindowsServiceSap\\Services\\SapQueryExecutor.cs",
-              "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\Services\\SapQueryExecutor.cs",
-              "RelativeToolTip": "WindowsServiceSap\\Services\\SapQueryExecutor.cs",
-              "ViewState": "AQIAAA4AAAAAAAAAAAAMwNcAAAAiAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-16T09:15:48.237Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 7,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\Program.cs",
@@ -144,7 +146,8 @@
               "RelativeToolTip": "WindowsServiceSap\\Program.cs",
               "ViewState": "AQIAAAIAAAAAAAAAAAAQwB4AAAAnAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-30T06:24:25.654Z"
+              "WhenOpened": "2024-12-30T06:24:25.654Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -154,9 +157,10 @@
               "RelativeDocumentMoniker": "WindowsServiceSap\\WindowsServiceSap.cs",
               "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\WindowsServiceSap.cs",
               "RelativeToolTip": "WindowsServiceSap\\WindowsServiceSap.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAATAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAABBwAEAAAATAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-30T06:25:44.098Z"
+              "WhenOpened": "2024-12-30T06:25:44.098Z",
+              "EditorCaption": ""
             }
           ]
         }

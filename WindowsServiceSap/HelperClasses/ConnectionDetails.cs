@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using WindowsServiceSap.DTOs;
+using Microsoft.SqlServer.Server;
 
 namespace WindowsServiceSap.HelperClasses
 {
@@ -129,8 +130,22 @@ namespace WindowsServiceSap.HelperClasses
                 }
 
                 string json = await Task.Run(() => File.ReadAllText(filePath));
-                return JsonSerializer.Deserialize<RelayConnectionDetails>(json);
+                var relayDetails = JsonSerializer.Deserialize<RelayConnectionDetails>(json);
+
+                if (relayDetails == null)
+                {
+                    throw new Exception("RelayConnectionDetails.json is empty or contains invalid data.");
+                }
+
+                // Validate Key1 and Key2
+                if (string.IsNullOrWhiteSpace(relayDetails.Key1) || string.IsNullOrWhiteSpace(relayDetails.Key2))
+                {
+                    throw new InvalidOperationException("Key1 or Key2 in RelayConnectionDetails.json is missing or empty.");
+                }
+
+                return relayDetails;
             }
+            catch(InvalidOperationException ex) { throw new InvalidOperationException($"Error reading RelayConnectionDetails: {ex.Message}"); }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error reading RelayConnectionDetails: {ex.Message}");
@@ -159,16 +174,25 @@ namespace WindowsServiceSap.HelperClasses
                 }
 
                 var connectionData = (JsonElement)existingData["ConnectionInfo"];
+                string serverAddress = connectionData.GetProperty("ServerAddress").GetString();
+                string portNumber = connectionData.GetProperty("PortNumber").GetString();
+
+                // Throw custom exception for invalid connection details
+                if (string.IsNullOrWhiteSpace(serverAddress) || string.IsNullOrWhiteSpace(portNumber))
+                {
+                    throw new InvalidOperationException("ConnectionDetails.json File is empty or contains invalid data");
+                }
                 var connectionDetails = new ConnectionDetailsRequest
                 {
-                    ServerAddress = connectionData.GetProperty("ServerAddress").GetString(),
-                    PortNumber = connectionData.GetProperty("PortNumber").GetString(),
+                    ServerAddress = serverAddress,
+                    PortNumber = portNumber,
                     UserName = DecryptField(connectionData.GetProperty("UserName").GetString()),
                     Password = DecryptField(connectionData.GetProperty("Password").GetString())
                 };
 
                 return connectionDetails;
             }
+            catch (InvalidOperationException ex) { throw new InvalidOperationException(ex.Message); }
             catch (FileNotFoundException exi) { throw new FileNotFoundException("ConnectionDetails File not Found", exi); }
             catch (Exception ex)
             {
@@ -235,6 +259,8 @@ namespace WindowsServiceSap.HelperClasses
                 throw new Exception("An error occurred while deleting connection details", ex);
             }
         }
+
+        
     }
 
 }

@@ -138,6 +138,10 @@ namespace WindowsServiceSap
                 // Keep the service running until cancellation is requested
                 await Task.Delay(Timeout.Infinite, _cts.Token);
             }
+            catch (InvalidOperationException ex)
+            {
+                throw;
+            }
             catch (OperationCanceledException)
             {
                 Console.WriteLine("ConnectRelay operation canceled.");

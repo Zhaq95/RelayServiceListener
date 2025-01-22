@@ -35,4 +35,9 @@ namespace WindowsServiceSap.DTOs
         public int SiteId { get; set; }
         public int TenantId { get; set; }
     }
+    public class OdbcConnectionDetailsRequest
+    {
+        public string QueryString { get; set; }
+        
+    }
 }
