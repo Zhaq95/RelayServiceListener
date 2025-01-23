@@ -254,6 +254,13 @@ namespace WindowsServiceSap
                                 return JsonSerializer.Serialize(result); // Serialize the list to JSON
                             });
                             break;
+                        case "CheckRelayConnection":
+                            await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
+                            {
+                                var result = await _connectionDetails.LoadRelayConnectionDetailsAsync();
+                                return JsonSerializer.Serialize(result); // Serialize the list to JSON
+                            });
+                            break;
                         case "DeleteConnectionDetails":
                             await HandleRequestAsync<DeleteConnectionDetailsDTO>(context, writer, requestBody, async (req) =>
                             {
