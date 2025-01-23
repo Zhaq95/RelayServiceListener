@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\services\\sapqueryexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|c:\\users\\zhaq\\documents\\relayservicelistener\\windowsservicesap\\helperclasses\\connectiondetails.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\helperclasses\\connectiondetails.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|C:\\Users\\zhaq\\Documents\\RelayServiceListener\\windowsservicesap\\relayservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\relayservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|c:\\users\\zhaq\\documents\\relayservicelistener\\windowsservicesap\\helperclasses\\connectiondetails.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\helperclasses\\connectiondetails.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|C:\\Users\\zhaq\\Documents\\RelayServiceListener\\windowsservicesap\\dtos\\dtos.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -49,16 +49,14 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ConnectionDetails.cs",
-              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
-              "RelativeDocumentMoniker": "WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
-              "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
-              "RelativeToolTip": "WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
-              "ViewState": "AQIAAJQAAAAAAAAAAAAcwMIAAAAiAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-16T09:03:32.607Z",
-              "EditorCaption": ""
+              "DocumentIndex": 8,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\OmniConnectAPI\\OmniConnectAPI\\appsettings.json",
+              "RelativeDocumentMoniker": "..\\OmniConnectAPI\\OmniConnectAPI\\appsettings.json",
+              "ToolTip": "C:\\Users\\zhaq\\Documents\\OmniConnectAPI\\OmniConnectAPI\\appsettings.json",
+              "RelativeToolTip": "..\\OmniConnectAPI\\OmniConnectAPI\\appsettings.json",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-01-02T11:02:21.637Z"
             },
             {
               "$type": "Document",
@@ -70,18 +68,17 @@
               "RelativeToolTip": "WindowsServiceSap\\DTOs\\DTOs.cs",
               "ViewState": "AQIAAAcAAAAAAAAAAAAQwCgAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-21T11:51:44.69Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-21T11:51:44.69Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "RelayService.cs",
               "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\RelayService.cs",
               "RelativeDocumentMoniker": "WindowsServiceSap\\RelayService.cs",
               "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\RelayService.cs",
               "RelativeToolTip": "WindowsServiceSap\\RelayService.cs",
-              "ViewState": "AQIAADQAAAAAAAAAAAArwEgAAAA8AAAA",
+              "ViewState": "AQIAANMAAAAAAAAAAAAiwOYAAABIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-30T06:24:38.729Z",
               "EditorCaption": ""
@@ -96,8 +93,7 @@
               "RelativeToolTip": "WindowsServiceSap\\Logger\\Logger.cs",
               "ViewState": "AQIAAA4AAAAAAAAAAAAxwAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-21T06:44:53.972Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-21T06:44:53.972Z"
             },
             {
               "$type": "Document",
@@ -109,8 +105,7 @@
               "RelativeToolTip": "WindowsServiceSap\\HelperClasses\\EncryptionHelper.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-21T06:44:11.686Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-21T06:44:11.686Z"
             },
             {
               "$type": "Document",
@@ -120,21 +115,23 @@
               "RelativeDocumentMoniker": "WindowsServiceSap\\Services\\SapQueryExecutor.cs",
               "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\Services\\SapQueryExecutor.cs",
               "RelativeToolTip": "WindowsServiceSap\\Services\\SapQueryExecutor.cs",
-              "ViewState": "AQIAANIAAAAAAAAAAAAiwNwAAAA7AAAA",
+              "ViewState": "AQIAAJQAAAAAAAAAAAAwwKMAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-16T09:15:48.237Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\OmniConnectAPI\\OmniConnectAPI\\appsettings.json",
-              "RelativeDocumentMoniker": "..\\OmniConnectAPI\\OmniConnectAPI\\appsettings.json",
-              "ToolTip": "C:\\Users\\zhaq\\Documents\\OmniConnectAPI\\OmniConnectAPI\\appsettings.json",
-              "RelativeToolTip": "..\\OmniConnectAPI\\OmniConnectAPI\\appsettings.json",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-01-02T11:02:21.637Z"
+              "DocumentIndex": 2,
+              "Title": "ConnectionDetails.cs",
+              "DocumentMoniker": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
+              "RelativeDocumentMoniker": "WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
+              "ToolTip": "C:\\Users\\zhaq\\Documents\\RelayServiceListener\\WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
+              "RelativeToolTip": "WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
+              "ViewState": "AQIAAIsAAAAAAAAAAAAkwLIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-16T09:03:32.607Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -146,8 +143,7 @@
               "RelativeToolTip": "WindowsServiceSap\\Program.cs",
               "ViewState": "AQIAAAIAAAAAAAAAAAAQwB4AAAAnAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-30T06:24:25.654Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-30T06:24:25.654Z"
             },
             {
               "$type": "Document",
@@ -159,8 +155,7 @@
               "RelativeToolTip": "WindowsServiceSap\\WindowsServiceSap.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAABBwAEAAAATAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-30T06:25:44.098Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-30T06:25:44.098Z"
             }
           ]
         }

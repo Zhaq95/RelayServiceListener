@@ -74,6 +74,16 @@ namespace WindowsServiceSap.Services
 
                 throw new FileNotFoundException("Failed to load connection details", ex);
             }
+            catch (Sap.Data.Hana.HanaException ex) when (ex.Message.Contains("System call 'connect' failed"))
+            {
+                // Handle connection-specific HanaException
+                throw new Exception("Unable to connect to the SAP HANA database. Please check credentials and network connectivity.", ex);
+            }
+            catch (Sap.Data.Hana.HanaException ex)
+            {
+                // Handle other HanaException cases
+                throw new Exception($"An SAP HANA-related error occurred: {ex.Message}", ex);
+            }
             catch (InvalidOperationException ex) { throw new InvalidOperationException(ex.Message); }
             catch (Exception ex)
             {
@@ -146,6 +156,17 @@ namespace WindowsServiceSap.Services
                 Console.WriteLine($"File Not Found: {fileNotFoundEx.Message}");
                 throw new FileNotFoundException("Connection details file not found.", fileNotFoundEx);
             }
+            catch (Sap.Data.Hana.HanaException ex) when (ex.Message.Contains("System call 'connect' failed"))
+            {
+                // Handle connection-specific HanaException
+                throw new Exception("Unable to connect to the SAP HANA database. Please check credentials and network connectivity.", ex);
+
+            }
+            catch (Sap.Data.Hana.HanaException ex)
+            {
+                // Handle other HanaException cases
+                throw new Exception($"An SAP HANA-related error occurred: {ex.Message}", ex);
+            }
             catch (Exception ex)
             {
                 // Catch any other exceptions
@@ -210,6 +231,17 @@ namespace WindowsServiceSap.Services
 
                 throw new FileNotFoundException("Failed to load connection details", ex);
             }
+            catch (Sap.Data.Hana.HanaException ex) when (ex.Message.Contains("System call 'connect' failed"))
+            {
+                // Handle connection-specific HanaException
+                throw new Exception("Unable to connect to the SAP HANA database. Please check credentials and network connectivity.", ex);
+
+            }
+            catch (Sap.Data.Hana.HanaException ex)
+            {
+                // Handle other HanaException cases
+                throw new Exception($"An SAP HANA-related error occurred: {ex.Message}", ex);
+            }
             catch (Exception ex)
             {
                 // Catch other potential exceptions and log them accordingly.
@@ -243,6 +275,13 @@ namespace WindowsServiceSap.Services
                 // Log the authentication failure and return "False"
                 return "False";
             }
+            catch (Sap.Data.Hana.HanaException ex) when (ex.Message.Contains("System call 'connect' failed"))
+            {
+                // Handle connection-specific HanaException
+                throw new Exception("Unable to connect to the SAP HANA database. Please check credentials and network connectivity.", ex);
+
+            }
+        
             catch (FileNotFoundException ex)
             {
 
