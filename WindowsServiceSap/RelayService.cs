@@ -225,24 +225,32 @@ namespace WindowsServiceSap
                                 return JsonSerializer.Serialize(new { message = "Connection details saved successfully." }); // Serialize to JSON
                             });
                             break;
-                        case "ExecuteQuery":
+
+                        case "SendOdbcConnectionDetails":
+                            await HandleRequestAsync<OdbcConnectionDetailsRequest>(context, writer, requestBody, async (details) =>
+                            {
+                                await _connectionDetails.SaveOrUpdateOdbcConnectionDetailsAsync(details);
+                                return JsonSerializer.Serialize(new { message = " ODbc Connection details saved successfully." }); // Serialize to JSON
+                            });
+                            break;
+                        case "ExecuteSapQuery":
                             await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
                             {
-                                var result = await _queryExecutor.ExecuteQuery(req.Query);
+                                var result = await _queryExecutor.ExecuteSapQuery(req.Query);
                                 return JsonSerializer.Serialize(result); // Serialize the list to JSON
                             });
                             break;
-                        case "ExecuteOdbcQuery":
+                        case "ExecuteSapOdbcQuery":
                             await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
                             {
-                                var result = await _queryExecutor.ExecuteOdbcQuery(req.Query);
+                                var result = await _queryExecutor.ExecuteSapOdbcQuery(req.Query);
                                 return JsonSerializer.Serialize(result); // Serialize the list to JSON
                             });
                             break;
-                        case "ExecuteISQuery":
+                        case "ExecuteSapISQuery":
                             await HandleRequestAsync<QueryRequestIS>(context, writer, requestBody, async (req) =>
                             {
-                                var result = await _queryExecutor.ExecuteISQuery(req);
+                                var result = await _queryExecutor.ExecuteSapISQuery(req);
                                 return JsonSerializer.Serialize(result); // Serialize the list to JSON
                             });
                             break;
@@ -264,7 +272,7 @@ namespace WindowsServiceSap
                         case "DeleteConnectionDetails":
                             await HandleRequestAsync<DeleteConnectionDetailsDTO>(context, writer, requestBody, async (req) =>
                             {
-                                var result = await _connectionDetails.DeleteConnectionDetailsAsync(req);
+                                var result = await _connectionDetails.DeleteOdbcConnectionDetailsAsync(req);
                                 return JsonSerializer.Serialize(new
                                 {
                                     Success = result,

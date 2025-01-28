@@ -81,6 +81,150 @@ namespace WindowsServiceSap.HelperClasses
             }
         }
 
+        public async Task<ConnectionDetailsRequest> LoadConnectionDetailsAsync()
+        {
+            try
+            {
+                string customJsonFilePath = Path.Combine(AppContext.BaseDirectory, "connectionDetails.json");
+
+                if (!File.Exists(customJsonFilePath))
+                {
+                    await logger.WriteLogAsync("ConnectionDetails.json file is not found.");
+                    throw new FileNotFoundException("ConnectionDetails.json file not found.");
+                }
+
+                string json = await Task.Run(() => File.ReadAllText(customJsonFilePath));
+                var existingData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+
+                if (existingData == null || !existingData.ContainsKey("ConnectionInfo"))
+                {
+                    throw new Exception("ConnectionInfo section not found in the JSON file.");
+                }
+
+                var connectionData = (JsonElement)existingData["ConnectionInfo"];
+                string serverAddress = connectionData.GetProperty("ServerAddress").GetString();
+                string portNumber = connectionData.GetProperty("PortNumber").GetString();
+
+                // Throw custom exception for invalid connection details
+                if (string.IsNullOrWhiteSpace(serverAddress) || string.IsNullOrWhiteSpace(portNumber))
+                {
+                    throw new InvalidOperationException("ConnectionDetails.json File is empty or contains invalid data");
+                }
+                var connectionDetails = new ConnectionDetailsRequest
+                {
+                    ServerAddress = serverAddress,
+                    PortNumber = portNumber,
+                    UserName = DecryptField(connectionData.GetProperty("UserName").GetString()),
+                    Password = DecryptField(connectionData.GetProperty("Password").GetString())
+                };
+
+                return connectionDetails;
+            }
+            catch (InvalidOperationException ex) { throw new InvalidOperationException(ex.Message); }
+            catch (FileNotFoundException exi) { throw new FileNotFoundException("ConnectionDetails File not Found", exi); }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while reading the connection details.", ex);
+            }
+        }
+
+        public async Task SaveOrUpdateOdbcConnectionDetailsAsync(OdbcConnectionDetailsRequest connectionDetails)
+        {
+            try
+            {
+                string customJsonFilePath = Path.Combine(AppContext.BaseDirectory, "OdbcconnectionDetails.json");
+
+                // Encrypt sensitive fields
+                byte[] encryptedUserName = ProtectedData.Protect(
+                    Encoding.UTF8.GetBytes(connectionDetails.QueryString),
+                    null,
+                    DataProtectionScope.LocalMachine
+                );
+
+                
+
+                var connectionData = new Dictionary<string, object>
+            {
+                { "ConnectionString", Convert.ToBase64String(encryptedUserName) },
+
+            };
+
+                string json = "{}";
+                if (File.Exists(customJsonFilePath))
+                {
+                    json = await Task.Run(() => File.ReadAllText(customJsonFilePath));
+                }
+
+                var existingData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(json)
+                                   ?? new Dictionary<string, object>();
+
+                if (existingData.ContainsKey("ConnectionInfo"))
+                {
+                    existingData["ConnectionInfo"] = connectionData;
+                }
+                else
+                {
+                    existingData.Add("ConnectionInfo", connectionData);
+                }
+
+                var updatedJson = System.Text.Json.JsonSerializer.Serialize(existingData, new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+                await Task.Run(() => File.WriteAllText(customJsonFilePath, updatedJson));
+                await logger.WriteLogAsync("OdbcConnectionDetails.json file is created.");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while saving or updating Odbc connection details in the custom JSON file.", ex);
+            }
+        }
+
+        public async Task<OdbcConnectionDetailsRequest> LoadOdbcConnectionDetailsAsync()
+        {
+            try
+            {
+                string customJsonFilePath = Path.Combine(AppContext.BaseDirectory, "OdbcconnectionDetails.json");
+
+                if (!File.Exists(customJsonFilePath))
+                {
+                    await logger.WriteLogAsync("OdbcConnectionDetails.json file is not found.");
+                    throw new FileNotFoundException("OdbcconnectionDetails.json file not found.");
+                }
+
+                string json = await Task.Run(() => File.ReadAllText(customJsonFilePath));
+                var existingData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+
+                if (existingData == null || !existingData.ContainsKey("ConnectionInfo"))
+                {
+                    throw new Exception("ConnectionInfo section not found in the JSON file.");
+                }
+
+                var connectionData = (JsonElement)existingData["ConnectionInfo"];
+                string ConnectionString = connectionData.GetProperty("ConnectionString").GetString();
+
+                // Throw custom exception for invalid connection details
+                if (string.IsNullOrWhiteSpace(ConnectionString))
+                {
+                    throw new InvalidOperationException("OdbcConnectionDetails.json File is empty or contains invalid data");
+                }
+                var connectionDetails = new OdbcConnectionDetailsRequest
+                {
+           
+                    QueryString = DecryptField(connectionData.GetProperty("ConnectionString").GetString()),
+                };
+
+                return connectionDetails;
+            }
+            catch (InvalidOperationException ex) { throw new InvalidOperationException(ex.Message); }
+            catch (FileNotFoundException exi) { throw new FileNotFoundException("ConnectionDetails File not Found", exi); }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while reading the connection details.", ex);
+            }
+        }
+
         public async Task SaveRelayConnectionDetailsAsync(RelayConnectionDetails relayDetails)
         {
             try
@@ -153,52 +297,6 @@ namespace WindowsServiceSap.HelperClasses
             }
         }
 
-        public async Task<ConnectionDetailsRequest> LoadConnectionDetailsAsync()
-        {
-            try
-            {
-                string customJsonFilePath = Path.Combine(AppContext.BaseDirectory, "connectionDetails.json");
-
-                if (!File.Exists(customJsonFilePath))
-                {
-                    await logger.WriteLogAsync("ConnectionDetails.json file is not found.");
-                    throw new FileNotFoundException("ConnectionDetails.json file not found.");
-                }
-
-                string json = await Task.Run(() => File.ReadAllText(customJsonFilePath));
-                var existingData = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(json);
-
-                if (existingData == null || !existingData.ContainsKey("ConnectionInfo"))
-                {
-                    throw new Exception("ConnectionInfo section not found in the JSON file.");
-                }
-
-                var connectionData = (JsonElement)existingData["ConnectionInfo"];
-                string serverAddress = connectionData.GetProperty("ServerAddress").GetString();
-                string portNumber = connectionData.GetProperty("PortNumber").GetString();
-
-                // Throw custom exception for invalid connection details
-                if (string.IsNullOrWhiteSpace(serverAddress) || string.IsNullOrWhiteSpace(portNumber))
-                {
-                    throw new InvalidOperationException("ConnectionDetails.json File is empty or contains invalid data");
-                }
-                var connectionDetails = new ConnectionDetailsRequest
-                {
-                    ServerAddress = serverAddress,
-                    PortNumber = portNumber,
-                    UserName = DecryptField(connectionData.GetProperty("UserName").GetString()),
-                    Password = DecryptField(connectionData.GetProperty("Password").GetString())
-                };
-
-                return connectionDetails;
-            }
-            catch (InvalidOperationException ex) { throw new InvalidOperationException(ex.Message); }
-            catch (FileNotFoundException exi) { throw new FileNotFoundException("ConnectionDetails File not Found", exi); }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while reading the connection details.", ex);
-            }
-        }
 
         private string DecryptField(string encryptedField)
         {
@@ -260,7 +358,53 @@ namespace WindowsServiceSap.HelperClasses
             }
         }
 
-        
+        public async Task<bool> DeleteOdbcConnectionDetailsAsync(DeleteConnectionDetailsDTO connectionDetails)
+        {
+            try
+            {
+                string customJsonFilePath = Path.Combine(AppContext.BaseDirectory, "OdbcconnectionDetails.json");
+
+                if (File.Exists(customJsonFilePath))
+                {
+                    // Ensure the file has admin permissions before attempting to delete it
+                    FileInfo fileInfo = new FileInfo(customJsonFilePath);
+                    FileSecurity fileSecurity = fileInfo.GetAccessControl();
+
+                    // Grant full control to the Administrators group
+                    fileSecurity.AddAccessRule(new FileSystemAccessRule(
+                        new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null),
+                        FileSystemRights.FullControl,
+                        AccessControlType.Allow));
+
+                    fileInfo.SetAccessControl(fileSecurity);
+
+                    // Delete the file
+                    File.Delete(customJsonFilePath);
+                    Console.WriteLine("OdbcconnectionDetails.json file deleted successfully.");
+                    await logger.WriteLogAsync("OdbcconnectionDetails.json file deleted successfully.");
+                    return true;
+
+                }
+                else
+                {
+                    Console.WriteLine("OdbcconnectionDetails.json file does not exist.");
+                    await logger.WriteLogAsync("OdbcconnectionDetails.json file does not exist.");
+                    return false;
+                }
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine($"Permission issue while deleting the file: {ex.Message}");
+                await logger.WriteLogAsync($"Permission issue while deleting the file: {ex.Message}");
+                throw new Exception("An error occurred while deleting connection details", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while deleting Odbc connection details", ex);
+            }
+        }
+
+
     }
 
 }
