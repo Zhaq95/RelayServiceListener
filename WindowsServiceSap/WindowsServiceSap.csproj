@@ -156,6 +156,7 @@
   <ItemGroup>
     <Compile Include="DTOs\DTOs.cs" />
     <Compile Include="HelperClasses\ConnectionDetails.cs" />
+    <Compile Include="HelperClasses\ConnectorStatus.cs" />
     <Compile Include="HelperClasses\EncryptionHelper.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="ProjectInstaller.cs">

@@ -28,11 +28,13 @@ namespace WindowsServiceSap
         private Logger logger;
         private SapQueryExecutor _queryExecutor;
         private ConnectionDetails _connectionDetails;
+        private ConnectorStatus _connectorStatus;
         public RelayService()
         {
             logger = new Logger();
             _queryExecutor = new SapQueryExecutor();
             _connectionDetails = new ConnectionDetails();
+            _connectorStatus = new ConnectorStatus();
         }
 
 
@@ -215,62 +217,27 @@ namespace WindowsServiceSap
                         await SendErrorResponseAsync(context, writer, HttpStatusCode.BadRequest, "RequestName header is missing.");
                         return;
                     }
-
-                    switch (requestName)
+                    if (requestName == "SendConnectionDetails")
                     {
-                        case "SendConnectionDetails":
-                            await HandleRequestAsync<ConnectionDetailsRequest>(context, writer, requestBody, async (details) =>
-                            {
-                                await _connectionDetails.SaveOrUpdateConnectionDetailsAsync(details);
-                                return JsonSerializer.Serialize(new { message = "Connection details saved successfully." }); // Serialize to JSON
-                            });
-                            break;
-
-                        case "SendOdbcConnectionDetails":
-                            await HandleRequestAsync<OdbcConnectionDetailsRequest>(context, writer, requestBody, async (details) =>
-                            {
-                                await _connectionDetails.SaveOrUpdateOdbcConnectionDetailsAsync(details);
-                                return JsonSerializer.Serialize(new { message = " ODbc Connection details saved successfully." }); // Serialize to JSON
-                            });
-                            break;
-                        case "ExecuteSapQuery":
-                            await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
-                            {
-                                var result = await _queryExecutor.ExecuteSapQuery(req.Query);
-                                return JsonSerializer.Serialize(result); // Serialize the list to JSON
-                            });
-                            break;
-                        case "ExecuteSapOdbcQuery":
-                            await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
-                            {
-                                var result = await _queryExecutor.ExecuteSapOdbcQuery(req.Query);
-                                return JsonSerializer.Serialize(result); // Serialize the list to JSON
-                            });
-                            break;
-                        case "ExecuteSapISQuery":
-                            await HandleRequestAsync<QueryRequestIS>(context, writer, requestBody, async (req) =>
-                            {
-                                var result = await _queryExecutor.ExecuteSapISQuery(req);
-                                return JsonSerializer.Serialize(result); // Serialize the list to JSON
-                            });
-                            break;
-
-                        case "CheckStatus":
-                            await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
-                            {
-                                var result = await _queryExecutor.CheckStatus(req.Query);
-                                return JsonSerializer.Serialize(result); // Serialize the list to JSON
-                            });
-                            break;
-                        case "CheckRelayConnection":
-                            await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
+                        await HandleRequestAsync<ConnectionDetailsRequest>(context, writer, requestBody, async (details) =>
+                        {
+                            await _connectionDetails.SaveOrUpdateConnectionDetailsAsync(details);
+                            return JsonSerializer.Serialize(new { message = "Connection details saved successfully." });
+                        });
+                        return;
+                    }
+                    else if (requestName == "CheckRelayConnection")
+                    {
+                        await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
                             {
                                 var result = await _connectionDetails.LoadRelayConnectionDetailsAsync();
                                 return JsonSerializer.Serialize(result); // Serialize the list to JSON
                             });
-                            break;
-                        case "DeleteConnectionDetails":
-                            await HandleRequestAsync<DeleteConnectionDetailsDTO>(context, writer, requestBody, async (req) =>
+                        return;
+                    }
+                    else if (requestName == "DeleteConnectionDetails")
+                    {
+                        await HandleRequestAsync<DeleteConnectionDetailsDTO>(context, writer, requestBody, async (req) =>
                             {
                                 var result = await _connectionDetails.DeleteConnectionDetailsAsync(req);
                                 return JsonSerializer.Serialize(new
@@ -279,11 +246,139 @@ namespace WindowsServiceSap
                                     Message = result ? "File deleted successfully." : "File does not exist."
                                 });
                             });
+                        return;
+                    }
+                    else if (requestName == "CheckConnectorStatus")
+                    {
+                        await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
+                        {
+                            var result = await _connectorStatus.CheckStatus(req.Query);
+                            return JsonSerializer.Serialize(result); // Serialize the list to JSON
+                        });
+                    }
+                    // ✅ Load connection details ONLY if the file exists
+                    string jsonFilePath = Path.Combine(AppContext.BaseDirectory, "ConnectionDetails.json");
+                    if (!File.Exists(jsonFilePath))
+                    {
+                        await SendErrorResponseAsync(context, HttpStatusCode.BadRequest, "ConnectionDetails.json file does not exist. Please send connection details first.");
+                        return;
+                    }
+                    var connectionDetails = await _connectionDetails.LoadConnectionDetailsAsync();
+                    if (connectionDetails == null || string.IsNullOrEmpty(connectionDetails.ConnectorType))
+                    {
+                        await SendErrorResponseAsync(context, HttpStatusCode.BadRequest, "ConnectorType is missing or invalid.");
+                        return;
+                    }
+
+
+                    // ✅ Route based on ConnectorType
+                    switch (connectionDetails.ConnectorType.ToLower().Replace(" ", ""))
+                    {
+                        case "saphana":
+                            if (requestName == "ExecuteQuery")
+                            {
+                                await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
+                                {
+                                    var result = await _queryExecutor.ExecuteSapQuery(req.Query);
+                                    return JsonSerializer.Serialize(result);
+                                });
+                            }
+                            else if (requestName == "ExecuteOdbcQuery")
+                            {
+                                await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
+                                {
+                                    var result = await _queryExecutor.ExecuteSapOdbcQuery(req.Query);
+                                    return JsonSerializer.Serialize(result);
+                                });
+                            }
+                            else if (requestName == "ExecuteISQuery")
+                            {
+                                await HandleRequestAsync<QueryRequestIS>(context, writer, requestBody, async (req) =>
+                                {
+                                    var result = await _queryExecutor.ExecuteSapISQuery(req);
+                                    return JsonSerializer.Serialize(result); // Serialize the list to JSON
+                                });
+                            }
+                            
                             break;
+
+                        case "odbcsql":
+                            
+                            break;
+
                         default:
-                            await SendErrorResponseAsync(context, writer, HttpStatusCode.BadRequest, "Invalid RequestName header.");
+                            await SendErrorResponseAsync(context, writer, HttpStatusCode.BadRequest, "Unsupported ConnectorType.");
                             break;
                     }
+
+                    //switch (requestName)
+                    //{
+                    //    case "SendConnectionDetails":
+                    //        await HandleRequestAsync<ConnectionDetailsRequest>(context, writer, requestBody, async (details) =>
+                    //        {
+                    //            await _connectionDetails.SaveOrUpdateConnectionDetailsAsync(details);
+                    //            return JsonSerializer.Serialize(new { message = "Connection details saved successfully." }); // Serialize to JSON
+                    //        });
+                    //        break;
+
+                    //    case "SendOdbcConnectionDetails":
+                    //        await HandleRequestAsync<OdbcConnectionDetailsRequest>(context, writer, requestBody, async (details) =>
+                    //        {
+                    //            await _connectionDetails.SaveOrUpdateOdbcConnectionDetailsAsync(details);
+                    //            return JsonSerializer.Serialize(new { message = " ODbc Connection details saved successfully." }); // Serialize to JSON
+                    //        });
+                    //        break;
+                    //    case "ExecuteSapQuery":
+                    //        await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
+                    //        {
+                    //            var result = await _queryExecutor.ExecuteSapQuery(req.Query);
+                    //            return JsonSerializer.Serialize(result); // Serialize the list to JSON
+                    //        });
+                    //        break;
+                    //    case "ExecuteSapOdbcQuery":
+                    //        await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
+                    //        {
+                    //            var result = await _queryExecutor.ExecuteSapOdbcQuery(req.Query);
+                    //            return JsonSerializer.Serialize(result); // Serialize the list to JSON
+                    //        });
+                    //        break;
+                    //    case "ExecuteSapISQuery":
+                    //        await HandleRequestAsync<QueryRequestIS>(context, writer, requestBody, async (req) =>
+                    //        {
+                    //            var result = await _queryExecutor.ExecuteSapISQuery(req);
+                    //            return JsonSerializer.Serialize(result); // Serialize the list to JSON
+                    //        });
+                    //        break;
+
+                    //    case "CheckStatus":
+                    //        await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
+                    //        {
+                    //            var result = await _queryExecutor.CheckStatus(req.Query);
+                    //            return JsonSerializer.Serialize(result); // Serialize the list to JSON
+                    //        });
+                    //        break;
+                    //    case "CheckRelayConnection":
+                    //        await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
+                    //        {
+                    //            var result = await _connectionDetails.LoadRelayConnectionDetailsAsync();
+                    //            return JsonSerializer.Serialize(result); // Serialize the list to JSON
+                    //        });
+                    //        break;
+                    //    case "DeleteConnectionDetails":
+                    //        await HandleRequestAsync<DeleteConnectionDetailsDTO>(context, writer, requestBody, async (req) =>
+                    //        {
+                    //            var result = await _connectionDetails.DeleteConnectionDetailsAsync(req);
+                    //            return JsonSerializer.Serialize(new
+                    //            {
+                    //                Success = result,
+                    //                Message = result ? "File deleted successfully." : "File does not exist."
+                    //            });
+                    //        });
+                    //        break;
+                    //    default:
+                    //        await SendErrorResponseAsync(context, writer, HttpStatusCode.BadRequest, "Invalid RequestName header.");
+                    //        break;
+                    //}
                 }
             }
             catch (FileNotFoundException ex)

@@ -282,22 +282,11 @@ namespace WindowsServiceSap.Services
             try
             {
                 var connectionDetails = await _service.LoadConnectionDetailsAsync();
-                var sapConnectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
-
-
-                //var connectionDetails = await _service.LoadOdbcConnectionDetailsAsync();
-                //var connectionString = connectionDetails.QueryString; 
-                //var parameters = ParseConnectionString(connectionString);
-                //// Build SAP connection string from extracted parameters
-                //var sapConnectionString = $"driver={parameters["driver"]};serverNode={parameters["serverNode"]};UID={parameters["UID"]};PWD={parameters["PWD"]}";
-
-
-
-
-
+                var connectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
+                
                 var results = new List<Dictionary<string, object>>();
 
-                using (var connection = new HanaConnection(sapConnectionString))
+                using (var connection = new HanaConnection(connectionString))
                 {
                     await connection.OpenAsync();
 

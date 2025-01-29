@@ -8,6 +8,7 @@ namespace WindowsServiceSap.DTOs
         public string PortNumber { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
+        public string ConnectorType { get; set; }
     }
 
     public class QueryRequest

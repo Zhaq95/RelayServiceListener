@@ -45,6 +45,7 @@ namespace WindowsServiceSap.HelperClasses
             {
                 { "ServerAddress", connectionDetails.ServerAddress },
                 { "PortNumber", connectionDetails.PortNumber },
+                { "ConnectorType", connectionDetails.ConnectorType },
                 { "UserName", Convert.ToBase64String(encryptedUserName) },
                 { "Password", Convert.ToBase64String(encryptedPassword) }
             };
@@ -104,6 +105,7 @@ namespace WindowsServiceSap.HelperClasses
                 var connectionData = (JsonElement)existingData["ConnectionInfo"];
                 string serverAddress = connectionData.GetProperty("ServerAddress").GetString();
                 string portNumber = connectionData.GetProperty("PortNumber").GetString();
+                string connectorType = connectionData.GetProperty("ConnectorType").GetString();
 
                 // Throw custom exception for invalid connection details
                 if (string.IsNullOrWhiteSpace(serverAddress) || string.IsNullOrWhiteSpace(portNumber))
@@ -114,6 +116,7 @@ namespace WindowsServiceSap.HelperClasses
                 {
                     ServerAddress = serverAddress,
                     PortNumber = portNumber,
+                    ConnectorType = connectorType,
                     UserName = DecryptField(connectionData.GetProperty("UserName").GetString()),
                     Password = DecryptField(connectionData.GetProperty("Password").GetString())
                 };
