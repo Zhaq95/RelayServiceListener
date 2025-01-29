@@ -27,13 +27,16 @@ namespace WindowsServiceSap.Services
 
             try
             {
+                var connectionDetails = await _service.LoadConnectionDetailsAsync();
+                var sapConnectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
 
-                // Fetch connection details from JSON based on ConnectionName
-                var connectionDetails = await _service.LoadOdbcConnectionDetailsAsync();
-                var connectionString = connectionDetails.QueryString; 
-                var parameters = ParseConnectionString(connectionString);
-                // Build SAP connection string from extracted parameters
-                var sapConnectionString = $"driver={parameters["driver"]};serverNode={parameters["serverNode"]};UID={parameters["UID"]};PWD={parameters["PWD"]}";
+
+                //Fetch connection details from JSON based on ConnectionName
+                //var connectionDetails = await _service.LoadOdbcConnectionDetailsAsync();
+                //var connectionString = connectionDetails.QueryString;
+                //var parameters = ParseConnectionString(connectionString);
+                //Build SAP connection string from extracted parameters
+                //var sapConnectionString = $"driver={parameters["driver"]};serverNode={parameters["serverNode"]};UID={parameters["UID"]};PWD={parameters["PWD"]}";
 
                 // Open the SAP HANA connection
 
@@ -108,18 +111,18 @@ namespace WindowsServiceSap.Services
             try
             {
                 var driver = "HDBODBC32";
-                //var connectionDetails = await _service.LoadConnectionDetailsAsync();
-                //var odbcConnectionString = $"driver={driver};serverNode={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UID={connectionDetails.UserName};PWD={connectionDetails.Password}"; ;
+                var connectionDetails = await _service.LoadConnectionDetailsAsync();
+                var odbcConnectionString = $"driver={driver};serverNode={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UID={connectionDetails.UserName};PWD={connectionDetails.Password}"; ;
 
 
-                // Fetch connection details from JSON based on ConnectionName
-                var connectionDetails = await _service.LoadOdbcConnectionDetailsAsync();
-                var connectionString = connectionDetails.QueryString; 
-                var parameters = ParseConnectionString(connectionString);
-                // Build SAP connection string from extracted parameters
-                var odbcSapConnectionString = $"driver={parameters["driver"]};serverNode={parameters["serverNode"]};UID={parameters["UID"]};PWD={parameters["PWD"]}";
+                //// Fetch connection details from JSON based on ConnectionName
+                //var connectionDetails = await _service.LoadOdbcConnectionDetailsAsync();
+                //var connectionString = connectionDetails.QueryString; 
+                //var parameters = ParseConnectionString(connectionString);
+                //// Build SAP connection string from extracted parameters
+                //var odbcSapConnectionString = $"driver={parameters["driver"]};serverNode={parameters["serverNode"]};UID={parameters["UID"]};PWD={parameters["PWD"]}";
 
-                using (var connection = new OdbcConnection(odbcSapConnectionString))
+                using (var connection = new OdbcConnection(odbcConnectionString))
                 {
                     await connection.OpenAsync();
 
@@ -193,15 +196,15 @@ namespace WindowsServiceSap.Services
 
         public async Task<List<Dictionary<string, object>>> ExecuteSapISQuery(QueryRequestIS request)
         {
-           // var connectionDetails = await _service.LoadConnectionDetailsAsync();
-            //var sapConnectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
+            var connectionDetails = await _service.LoadConnectionDetailsAsync();
+            var sapConnectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
 
-            // Fetch connection details from JSON based on ConnectionName
-            var connectionDetails = await _service.LoadOdbcConnectionDetailsAsync();
-            var connectionString = connectionDetails.QueryString; 
-            var parameters = ParseConnectionString(connectionString);
-            // Build SAP connection string from extracted parameters
-            var sapConnectionString = $"driver={parameters["driver"]};serverNode={parameters["serverNode"]};UID={parameters["UID"]};PWD={parameters["PWD"]}";
+            //// Fetch connection details from JSON based on ConnectionName
+            //var connectionDetails = await _service.LoadOdbcConnectionDetailsAsync();
+            //var connectionString = connectionDetails.QueryString; 
+            //var parameters = ParseConnectionString(connectionString);
+            //// Build SAP connection string from extracted parameters
+            //var sapConnectionString = $"driver={parameters["driver"]};serverNode={parameters["serverNode"]};UID={parameters["UID"]};PWD={parameters["PWD"]}";
 
 
 
@@ -278,15 +281,15 @@ namespace WindowsServiceSap.Services
         {
             try
             {
-                //var connectionDetails = await _service.LoadConnectionDetailsAsync();
-                //var sapConnectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
+                var connectionDetails = await _service.LoadConnectionDetailsAsync();
+                var sapConnectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
 
 
-                var connectionDetails = await _service.LoadOdbcConnectionDetailsAsync();
-                var connectionString = connectionDetails.QueryString; 
-                var parameters = ParseConnectionString(connectionString);
-                // Build SAP connection string from extracted parameters
-                var sapConnectionString = $"driver={parameters["driver"]};serverNode={parameters["serverNode"]};UID={parameters["UID"]};PWD={parameters["PWD"]}";
+                //var connectionDetails = await _service.LoadOdbcConnectionDetailsAsync();
+                //var connectionString = connectionDetails.QueryString; 
+                //var parameters = ParseConnectionString(connectionString);
+                //// Build SAP connection string from extracted parameters
+                //var sapConnectionString = $"driver={parameters["driver"]};serverNode={parameters["serverNode"]};UID={parameters["UID"]};PWD={parameters["PWD"]}";
 
 
 
@@ -329,27 +332,27 @@ namespace WindowsServiceSap.Services
             }
         }
 
-        private Dictionary<string, string> ParseConnectionString(string connectionString)
-        {
-            var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        //private Dictionary<string, string> ParseConnectionString(string connectionString)
+        //{
+        //    var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-            // Use a char array for the separator, and include StringSplitOptions.RemoveEmptyEntries
-            var keyValuePairs = connectionString.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+        //    // Use a char array for the separator, and include StringSplitOptions.RemoveEmptyEntries
+        //    var keyValuePairs = connectionString.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (var keyValuePair in keyValuePairs)
-            {
-                var parts = keyValuePair.Split(new[] { '=' }, 2); // Split into key and value
-                if (parts.Length == 2)
-                {
-                    var key = parts[0].Trim();
-                    var value = parts[1].Trim();
+        //    foreach (var keyValuePair in keyValuePairs)
+        //    {
+        //        var parts = keyValuePair.Split(new[] { '=' }, 2); // Split into key and value
+        //        if (parts.Length == 2)
+        //        {
+        //            var key = parts[0].Trim();
+        //            var value = parts[1].Trim();
 
-                    result[key] = value;
-                }
-            }
+        //            result[key] = value;
+        //        }
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
     }
 }

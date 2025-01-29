@@ -272,7 +272,7 @@ namespace WindowsServiceSap
                         case "DeleteConnectionDetails":
                             await HandleRequestAsync<DeleteConnectionDetailsDTO>(context, writer, requestBody, async (req) =>
                             {
-                                var result = await _connectionDetails.DeleteOdbcConnectionDetailsAsync(req);
+                                var result = await _connectionDetails.DeleteConnectionDetailsAsync(req);
                                 return JsonSerializer.Serialize(new
                                 {
                                     Success = result,
