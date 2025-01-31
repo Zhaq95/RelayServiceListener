@@ -277,71 +277,51 @@ namespace WindowsServiceSap.Services
             return results;
         }
 
-        public async Task<string> CheckStatus(string query)
-        {
-            try
-            {
-                var connectionDetails = await _service.LoadConnectionDetailsAsync();
-                var connectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
-                
-                var results = new List<Dictionary<string, object>>();
-
-                using (var connection = new HanaConnection(connectionString))
-                {
-                    await connection.OpenAsync();
-
-                    connection.Close();
-                }
-
-                return "True";
-            }
-            catch (InvalidOperationException ex) { throw new InvalidOperationException(ex.Message); }
-
-            catch (Sap.Data.Hana.HanaException ex) when (ex.Message.IndexOf("authentication failed", StringComparison.OrdinalIgnoreCase) >= 0)
-            {
-                // Log the authentication failure and return "False"
-                return "False";
-            }
-            catch (Sap.Data.Hana.HanaException ex) when (ex.Message.Contains("System call 'connect' failed"))
-            {
-                // Handle connection-specific HanaException
-                throw new Exception("Unable to connect to the SAP HANA database. Please check credentials and network connectivity.", ex);
-
-            }
-        
-            catch (FileNotFoundException ex)
-            {
-
-                throw new FileNotFoundException("Failed to load connection details", ex);
-            }
-            catch (Exception ex)
-            {
-                // Log other exceptions and return "False"
-                return "False";
-            }
-        }
-
-        //private Dictionary<string, string> ParseConnectionString(string connectionString)
+        //public async Task<string> CheckStatus(string query)
         //{
-        //    var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-        //    // Use a char array for the separator, and include StringSplitOptions.RemoveEmptyEntries
-        //    var keyValuePairs = connectionString.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-        //    foreach (var keyValuePair in keyValuePairs)
+        //    try
         //    {
-        //        var parts = keyValuePair.Split(new[] { '=' }, 2); // Split into key and value
-        //        if (parts.Length == 2)
+        //        var connectionDetails = await _service.LoadConnectionDetailsAsync();
+        //        var connectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
+                
+        //        var results = new List<Dictionary<string, object>>();
+
+        //        using (var connection = new HanaConnection(connectionString))
         //        {
-        //            var key = parts[0].Trim();
-        //            var value = parts[1].Trim();
+        //            await connection.OpenAsync();
 
-        //            result[key] = value;
+        //            connection.Close();
         //        }
-        //    }
 
-        //    return result;
+        //        return "True";
+        //    }
+        //    catch (InvalidOperationException ex) { throw new InvalidOperationException(ex.Message); }
+
+        //    catch (Sap.Data.Hana.HanaException ex) when (ex.Message.IndexOf("authentication failed", StringComparison.OrdinalIgnoreCase) >= 0)
+        //    {
+        //        // Log the authentication failure and return "False"
+        //        return "False";
+        //    }
+        //    catch (Sap.Data.Hana.HanaException ex) when (ex.Message.Contains("System call 'connect' failed"))
+        //    {
+        //        // Handle connection-specific HanaException
+        //        throw new Exception("Unable to connect to the SAP HANA database. Please check credentials and network connectivity.", ex);
+
+        //    }
+        
+        //    catch (FileNotFoundException ex)
+        //    {
+
+        //        throw new FileNotFoundException("Failed to load connection details", ex);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log other exceptions and return "False"
+        //        return "False";
+        //    }
         //}
+
+   
 
     }
 }

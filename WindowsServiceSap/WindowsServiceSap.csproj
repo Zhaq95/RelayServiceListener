@@ -166,6 +166,7 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="RelayService.cs" />
+    <Compile Include="Services\OdbcSqlQueryExecutor.cs" />
     <Compile Include="Services\SapQueryExecutor.cs" />
     <Compile Include="WindowsServiceSap.cs">
       <SubType>Component</SubType>
