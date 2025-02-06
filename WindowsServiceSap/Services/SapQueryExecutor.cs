@@ -97,7 +97,7 @@ namespace WindowsServiceSap.Services
             catch (Exception ex)
             {
                 // Catch other potential exceptions and log them accordingly.
-                throw new Exception("An error occurred while executing the query.", ex);
+                throw new Exception(ex.Message);
             }
             return results;
          }
@@ -110,7 +110,12 @@ namespace WindowsServiceSap.Services
 
             try
             {
-                var driver = "HDBODBC32";
+                //var driver = "HDBODBC32";
+                string driver = DetectSapOdbcDriver();
+                if (string.IsNullOrEmpty(driver))
+                    throw new Exception("No SAP HANA ODBC driver (HDBODBC or HDBODBC32) found on the system.");
+                Console.WriteLine(driver);
+
                 var connectionDetails = await _service.LoadConnectionDetailsAsync();
                 var odbcConnectionString = $"driver={driver};serverNode={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UID={connectionDetails.UserName};PWD={connectionDetails.Password}"; ;
 
@@ -277,51 +282,47 @@ namespace WindowsServiceSap.Services
             return results;
         }
 
-        //public async Task<string> CheckStatus(string query)
-        //{
-        //    try
-        //    {
-        //        var connectionDetails = await _service.LoadConnectionDetailsAsync();
-        //        var connectionString = $"Server={connectionDetails.ServerAddress}:{connectionDetails.PortNumber};UserID={connectionDetails.UserName};Password={connectionDetails.Password};";
-                
-        //        var results = new List<Dictionary<string, object>>();
+        private string DetectSapOdbcDriver()
+        {
+            var drivers = new HashSet<string>();
 
-        //        using (var connection = new HanaConnection(connectionString))
-        //        {
-        //            await connection.OpenAsync();
+            // Check for 64-bit ODBC drivers
+            using (var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\ODBC\ODBCINST.INI\ODBC Drivers"))
+            {
+                if (key != null)
+                {
+                    drivers.UnionWith(key.GetValueNames());
+                }
+            }
 
-        //            connection.Close();
-        //        }
+            // Check for 32-bit ODBC drivers
+            using (var key32 = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\ODBC\ODBCINST.INI\ODBC Drivers"))
+            {
+                if (key32 != null)
+                {
+                    drivers.UnionWith(key32.GetValueNames());
+                }
+            }
 
-        //        return "True";
-        //    }
-        //    catch (InvalidOperationException ex) { throw new InvalidOperationException(ex.Message); }
+            bool is64BitProcess = Environment.Is64BitProcess;
 
-        //    catch (Sap.Data.Hana.HanaException ex) when (ex.Message.IndexOf("authentication failed", StringComparison.OrdinalIgnoreCase) >= 0)
-        //    {
-        //        // Log the authentication failure and return "False"
-        //        return "False";
-        //    }
-        //    catch (Sap.Data.Hana.HanaException ex) when (ex.Message.Contains("System call 'connect' failed"))
-        //    {
-        //        // Handle connection-specific HanaException
-        //        throw new Exception("Unable to connect to the SAP HANA database. Please check credentials and network connectivity.", ex);
+            if (drivers.Contains("HDBODBC") && is64BitProcess)
+                return "HDBODBC";  // Use 64-bit driver if process is 64-bit
 
-        //    }
-        
-        //    catch (FileNotFoundException ex)
-        //    {
+            if (drivers.Contains("HDBODBC32") && !is64BitProcess)
+                return "HDBODBC32"; // Use 32-bit driver if process is 32-bit
 
-        //        throw new FileNotFoundException("Failed to load connection details", ex);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log other exceptions and return "False"
-        //        return "False";
-        //    }
-        //}
+            if (drivers.Contains("HDBODBC"))
+                return "HDBODBC"; // Fallback to 64-bit if available
 
-   
+            if (drivers.Contains("HDBODBC32"))
+                return "HDBODBC32"; // Fallback to 32-bit if only that is available
+
+            return null; // No SAP HANA ODBC driver found
+        }
+
+
+
 
     }
 }

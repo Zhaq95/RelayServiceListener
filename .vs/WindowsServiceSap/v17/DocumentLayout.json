@@ -3,11 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\ahadomer\\Desktop\\Azure RelayService\\Azure RelayService230125\\RelayServiceListener\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|c:\\users\\ahadomer\\desktop\\azure relayservice\\azure relayservice230125\\relayservicelistener\\windowsservicesap\\services\\odbcsqlqueryexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\services\\odbcsqlqueryexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|WindowsServiceSap||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|C:\\Users\\ahadomer\\Desktop\\Azure RelayService\\Azure RelayService230125\\RelayServiceListener\\windowsservicesap\\services\\sapqueryexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|c:\\users\\ahadomer\\desktop\\azure relayservice\\azure relayservice230125\\relayservicelistener\\windowsservicesap\\services\\sapqueryexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\services\\sapqueryexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -15,8 +14,15 @@
       "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\relayservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|C:\\Users\\ahadomer\\Desktop\\Azure RelayService\\Azure RelayService230125\\RelayServiceListener\\windowsservicesap\\services\\odbcsqlqueryexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\services\\odbcsqlqueryexecutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|C:\\Users\\ahadomer\\Desktop\\Azure RelayService\\Azure RelayService230125\\RelayServiceListener\\windowsservicesap\\helperclasses\\connectiondetails.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|solutionrelative:windowsservicesap\\helperclasses\\connectiondetails.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4E4FD267-5B29-44EC-BDA9-6E0EAD78CF0B}|WindowsServiceSap\\WindowsServiceSap.csproj|c:\\users\\ahadomer\\desktop\\azure relayservice\\azure relayservice230125\\relayservicelistener\\windowsservicesap\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|a54ad834-9219-4aa6-b589-607af21c3e26"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,11 +32,23 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "WindowsServiceSap",
+              "DocumentMoniker": "C:\\Users\\ahadomer\\Desktop\\Azure RelayService\\Azure RelayService230125\\RelayServiceListener\\WindowsServiceSap\\WindowsServiceSap.csproj",
+              "RelativeDocumentMoniker": "WindowsServiceSap\\WindowsServiceSap.csproj",
+              "ToolTip": "C:\\Users\\ahadomer\\Desktop\\Azure RelayService\\Azure RelayService230125\\RelayServiceListener\\WindowsServiceSap\\WindowsServiceSap.csproj",
+              "RelativeToolTip": "WindowsServiceSap\\WindowsServiceSap.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-02-06T06:17:09.757Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -40,23 +58,22 @@
               "RelativeDocumentMoniker": "WindowsServiceSap\\Services\\SapQueryExecutor.cs",
               "ToolTip": "C:\\Users\\ahadomer\\Desktop\\Azure RelayService\\Azure RelayService230125\\RelayServiceListener\\WindowsServiceSap\\Services\\SapQueryExecutor.cs",
               "RelativeToolTip": "WindowsServiceSap\\Services\\SapQueryExecutor.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAAEQBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAgwGMAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-30T09:46:14.611Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "OdbcSqlQueryExecutor.cs",
               "DocumentMoniker": "C:\\Users\\ahadomer\\Desktop\\Azure RelayService\\Azure RelayService230125\\RelayServiceListener\\WindowsServiceSap\\Services\\OdbcSqlQueryExecutor.cs",
               "RelativeDocumentMoniker": "WindowsServiceSap\\Services\\OdbcSqlQueryExecutor.cs",
               "ToolTip": "C:\\Users\\ahadomer\\Desktop\\Azure RelayService\\Azure RelayService230125\\RelayServiceListener\\WindowsServiceSap\\Services\\OdbcSqlQueryExecutor.cs",
               "RelativeToolTip": "WindowsServiceSap\\Services\\OdbcSqlQueryExecutor.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAmwGEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABYAAAAAAAAAAAAQwCEAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-30T05:54:33.446Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-30T05:54:33.446Z"
             },
             {
               "$type": "Document",
@@ -66,14 +83,13 @@
               "RelativeDocumentMoniker": "WindowsServiceSap\\RelayService.cs",
               "ToolTip": "C:\\Users\\ahadomer\\Desktop\\Azure RelayService\\Azure RelayService230125\\RelayServiceListener\\WindowsServiceSap\\RelayService.cs",
               "RelativeToolTip": "WindowsServiceSap\\RelayService.cs",
-              "ViewState": "AgIAACsBAAAAAAAAAAAAADoBAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAABEBAAAAQAAAAADYvxsBAABOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-28T06:22:52.474Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-28T06:22:52.474Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "ConnectionDetails.cs",
               "DocumentMoniker": "C:\\Users\\ahadomer\\Desktop\\Azure RelayService\\Azure RelayService230125\\RelayServiceListener\\WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
               "RelativeDocumentMoniker": "WindowsServiceSap\\HelperClasses\\ConnectionDetails.cs",
