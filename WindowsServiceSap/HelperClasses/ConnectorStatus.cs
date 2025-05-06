@@ -33,7 +33,7 @@ namespace WindowsServiceSap.HelperClasses
                 {
                     case "saphana":
                         return await CheckSapHanaStatus(connectionDetails);
-                    case "odbcsql":
+                    case "odbcmssql":
                         return await CheckOdbcSqlStatus(connectionDetails);
                     default:
                         throw new Exception($"Unsupported ConnectorType: {connectionDetails.ConnectorType}");

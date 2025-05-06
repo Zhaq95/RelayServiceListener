@@ -57,14 +57,13 @@ namespace WindowsServiceSap
                     Console.WriteLine("RelayConnectionDetails.json not found. Creating default configuration file...");
                     await logger.WriteLogAsync($"RelayConnectionDetails.json not found. Creating default configuration file...");
 
-                    // Initialize RelayConnectionDetails with blank values
                     var newRelayDetails = new RelayConnectionDetails
                     {
-                        Key1 = "",  // Blank for the user to fill in
-                        Key2 = "" // Blank for the user to fill in
+                        Key1 = "",  
+                        Key2 = "" 
                     };
 
-                    // Save the RelayConnectionDetails with blank values to file
+                    
                     await _connectionDetails.SaveRelayConnectionDetailsAsync(newRelayDetails);
 
                     Console.WriteLine("Default RelayConnectionDetails.json file created. Please update this file with valid values.");
@@ -73,10 +72,10 @@ namespace WindowsServiceSap
                     return;
                 }
 
-                // Step 2: Load RelayConnectionDetails (after creation or already existing)
+            
                 var relayDetails = await _connectionDetails.LoadRelayConnectionDetailsAsync();
 
-                // Check if values are missing (optional)
+
                 if (string.IsNullOrEmpty(relayDetails.Key1) || string.IsNullOrEmpty(relayDetails.Key2))
                 {
                     Console.WriteLine("Warning: RelayConnectionString or HybridConnectionName is still missing in RelayConnectionDetails.json.");
@@ -190,6 +189,7 @@ namespace WindowsServiceSap
 
         public async Task ProcessRequestAsync(RelayedHttpListenerContext context)
         {
+            
             Console.WriteLine("Incoming HTTP request...");
 
             try
@@ -265,16 +265,11 @@ namespace WindowsServiceSap
                         await SendErrorResponseAsync(context, HttpStatusCode.BadRequest, "ConnectionDetails.json file does not exist. Please send connection details first.");
                         return;
                     }
-                    //var connectionDetails = await _connectionDetails.LoadConnectionDetailsAsync();
-                    //if (connectionDetails == null || string.IsNullOrEmpty(connectionDetails.ConnectorType))
-                    //{
-                    //    await SendErrorResponseAsync(context, HttpStatusCode.BadRequest, "ConnectorType is missing or invalid.");
-                    //    return;
-                    //}
+              
 
                     //-------------------------------------------------------------------------------------
                     // Deserialize all connections
-                    var allConnections = await _connectionDetails.LoadAllConnectionDetailsAsync(); // You need to create this method!
+                    var allConnections = await _connectionDetails.LoadAllConnectionDetailsAsync(); 
 
                     // Deserialize the incoming request to get ConnectorId
                     var requestObj = JsonSerializer.Deserialize<QueryRequest>(requestBody);
@@ -330,7 +325,7 @@ namespace WindowsServiceSap
                             
                             break;
 
-                        case "odbcsql":
+                        case "odbcmssql":
                             if (requestName == "ExecutesqlQuery")
                             {
                                 await HandleRequestAsync<QueryRequest>(context, writer, requestBody, async (req) =>
