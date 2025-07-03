@@ -157,8 +157,6 @@ C:\Users\ahadomer\Desktop\Azure RelayService\Azure RelayService230125\RelayServi
 C:\Users\ahadomer\Desktop\Azure RelayService\Azure RelayService230125\RelayServiceListener\WindowsServiceSap\obj\Release\WindowsS.54651494.Up2Date
 C:\Users\ahadomer\Desktop\Azure RelayService\Azure RelayService230125\RelayServiceListener\WindowsServiceSap\obj\Release\WindowsServiceSap.exe
 C:\Users\ahadomer\Desktop\Azure RelayService\Azure RelayService230125\RelayServiceListener\WindowsServiceSap\obj\Release\WindowsServiceSap.pdb
-C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\obj\Release\WindowsServiceSap.csproj.AssemblyReference.cache
-C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\obj\Release\WindowsServiceSap.csproj.CoreCompileInputs.cache
 C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\bin\Release\WindowsServiceSap.exe.config
 C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\bin\Release\WindowsServiceSap.exe
 C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\bin\Release\WindowsServiceSap.pdb
@@ -207,6 +205,8 @@ C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\bin\Release\Sy
 C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\bin\Release\System.Text.Json.xml
 C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\bin\Release\System.Threading.Tasks.Extensions.xml
 C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\bin\Release\System.ValueTuple.xml
+C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\obj\Release\WindowsServiceSap.csproj.AssemblyReference.cache
+C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\obj\Release\WindowsServiceSap.csproj.CoreCompileInputs.cache
 C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\obj\Release\WindowsS.54651494.Up2Date
 C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\obj\Release\WindowsServiceSap.exe
 C:\Users\zhaq\Desktop\RelayServiceListener-Zhaq\WindowsServiceSap\obj\Release\WindowsServiceSap.pdb

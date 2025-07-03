@@ -17,7 +17,7 @@ namespace WindowsServiceSap
             // Define the ServiceInstaller
             ServiceInstaller serviceInstaller = new ServiceInstaller();
             serviceInstaller.StartType = ServiceStartMode.Automatic; // Auto-start
-            serviceInstaller.ServiceName = "WindowsServiceSap"; // Service name
+            serviceInstaller.ServiceName = "OCIR"; // Service name
 
             // Add the installers to the Installers collection
             Installers.Add(processInstaller);
